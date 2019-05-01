@@ -76,7 +76,9 @@ namespace Hydrology.CControls
             m_dataTable_1.Columns.Add("state");
 
 
-
+            this.Columns[3].Visible = false;
+            this.Columns[4].Visible = false;
+            this.Columns[5].Visible = false;
             this.Columns[9].Visible = false;
             //  this.ReCalculateSize();
             //调整列宽

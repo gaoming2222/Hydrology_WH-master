@@ -34,17 +34,11 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.listView1 = new System.Windows.Forms.ListView();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.radioWater = new System.Windows.Forms.RadioButton();
-            this.radioRain = new System.Windows.Forms.RadioButton();
             this.dtp_EndTime = new System.Windows.Forms.DateTimePicker();
             this.dtp_StartTime = new System.Windows.Forms.DateTimePicker();
-            this.radioDay = new System.Windows.Forms.RadioButton();
-            this.radioHour = new System.Windows.Forms.RadioButton();
             this.cmbStation = new System.Windows.Forms.ComboBox();
             this.lbl_EndTime = new System.Windows.Forms.Label();
             this.lbl_StartTime = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
@@ -56,7 +50,6 @@
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -109,15 +102,11 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.panel3);
             this.groupBox2.Controls.Add(this.dtp_EndTime);
             this.groupBox2.Controls.Add(this.dtp_StartTime);
-            this.groupBox2.Controls.Add(this.radioDay);
-            this.groupBox2.Controls.Add(this.radioHour);
             this.groupBox2.Controls.Add(this.cmbStation);
             this.groupBox2.Controls.Add(this.lbl_EndTime);
             this.groupBox2.Controls.Add(this.lbl_StartTime);
-            this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(3, 3);
@@ -127,40 +116,9 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "配置";
             // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.radioWater);
-            this.panel3.Controls.Add(this.radioRain);
-            this.panel3.Location = new System.Drawing.Point(49, 50);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(290, 29);
-            this.panel3.TabIndex = 12;
-            // 
-            // radioWater
-            // 
-            this.radioWater.AutoSize = true;
-            this.radioWater.Checked = true;
-            this.radioWater.Location = new System.Drawing.Point(123, 8);
-            this.radioWater.Name = "radioWater";
-            this.radioWater.Size = new System.Drawing.Size(47, 16);
-            this.radioWater.TabIndex = 10;
-            this.radioWater.TabStop = true;
-            this.radioWater.Text = "水位";
-            this.radioWater.UseVisualStyleBackColor = true;
-            // 
-            // radioRain
-            // 
-            this.radioRain.AutoSize = true;
-            this.radioRain.Location = new System.Drawing.Point(224, 8);
-            this.radioRain.Name = "radioRain";
-            this.radioRain.Size = new System.Drawing.Size(47, 16);
-            this.radioRain.TabIndex = 11;
-            this.radioRain.Text = "雨量";
-            this.radioRain.UseVisualStyleBackColor = true;
-            // 
             // dtp_EndTime
             // 
-            this.dtp_EndTime.Location = new System.Drawing.Point(172, 154);
+            this.dtp_EndTime.Location = new System.Drawing.Point(172, 131);
             this.dtp_EndTime.Name = "dtp_EndTime";
             this.dtp_EndTime.Size = new System.Drawing.Size(167, 21);
             this.dtp_EndTime.TabIndex = 8;
@@ -168,39 +126,18 @@
             // dtp_StartTime
             // 
             this.dtp_StartTime.CustomFormat = "\"\"";
-            this.dtp_StartTime.Location = new System.Drawing.Point(172, 119);
+            this.dtp_StartTime.Location = new System.Drawing.Point(172, 78);
             this.dtp_StartTime.Name = "dtp_StartTime";
             this.dtp_StartTime.Size = new System.Drawing.Size(167, 21);
             this.dtp_StartTime.TabIndex = 7;
             // 
-            // radioDay
-            // 
-            this.radioDay.AutoSize = true;
-            this.radioDay.Location = new System.Drawing.Point(273, 85);
-            this.radioDay.Name = "radioDay";
-            this.radioDay.Size = new System.Drawing.Size(59, 16);
-            this.radioDay.TabIndex = 6;
-            this.radioDay.Text = "日传输";
-            this.radioDay.UseVisualStyleBackColor = true;
-            this.radioDay.CheckedChanged += new System.EventHandler(this.RadioButton_CheckedChanged);
-            // 
-            // radioHour
-            // 
-            this.radioHour.AutoSize = true;
-            this.radioHour.Checked = true;
-            this.radioHour.Location = new System.Drawing.Point(172, 85);
-            this.radioHour.Name = "radioHour";
-            this.radioHour.Size = new System.Drawing.Size(71, 16);
-            this.radioHour.TabIndex = 5;
-            this.radioHour.TabStop = true;
-            this.radioHour.Text = "小时传输";
-            this.radioHour.UseVisualStyleBackColor = true;
-            this.radioHour.CheckedChanged += new System.EventHandler(this.RadioButton_CheckedChanged);
-            // 
             // cmbStation
             // 
             this.cmbStation.FormattingEnabled = true;
-            this.cmbStation.Location = new System.Drawing.Point(172, 18);
+            this.cmbStation.Items.AddRange(new object[] {
+            "0011223344",
+            "0011223345"});
+            this.cmbStation.Location = new System.Drawing.Point(172, 24);
             this.cmbStation.Name = "cmbStation";
             this.cmbStation.Size = new System.Drawing.Size(167, 20);
             this.cmbStation.TabIndex = 4;
@@ -208,7 +145,7 @@
             // lbl_EndTime
             // 
             this.lbl_EndTime.AutoSize = true;
-            this.lbl_EndTime.Location = new System.Drawing.Point(73, 158);
+            this.lbl_EndTime.Location = new System.Drawing.Point(73, 140);
             this.lbl_EndTime.Name = "lbl_EndTime";
             this.lbl_EndTime.Size = new System.Drawing.Size(65, 12);
             this.lbl_EndTime.TabIndex = 3;
@@ -217,20 +154,11 @@
             // lbl_StartTime
             // 
             this.lbl_StartTime.AutoSize = true;
-            this.lbl_StartTime.Location = new System.Drawing.Point(72, 121);
+            this.lbl_StartTime.Location = new System.Drawing.Point(73, 84);
             this.lbl_StartTime.Name = "lbl_StartTime";
             this.lbl_StartTime.Size = new System.Drawing.Size(65, 12);
             this.lbl_StartTime.TabIndex = 2;
             this.lbl_StartTime.Text = "起始时间：";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(73, 87);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(65, 12);
-            this.label8.TabIndex = 1;
-            this.label8.Text = "传输方式：";
             // 
             // label9
             // 
@@ -264,6 +192,7 @@
             this.radioButton2.TabStop = true;
             this.radioButton2.Text = "存库";
             this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioButton2.Visible = false;
             // 
             // radioButtonSave
             // 
@@ -275,6 +204,7 @@
             this.radioButtonSave.TabStop = true;
             this.radioButtonSave.Text = "存文本";
             this.radioButtonSave.UseVisualStyleBackColor = true;
+            this.radioButtonSave.Visible = false;
             // 
             // btnClear
             // 
@@ -322,8 +252,6 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.ResumeLayout(false);
@@ -337,11 +265,8 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.DateTimePicker dtp_EndTime;
         private System.Windows.Forms.DateTimePicker dtp_StartTime;
-        private System.Windows.Forms.RadioButton radioDay;
-        private System.Windows.Forms.RadioButton radioHour;
         private System.Windows.Forms.Label lbl_EndTime;
         private System.Windows.Forms.Label lbl_StartTime;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.ListView listView1;
@@ -350,9 +275,6 @@
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.ComboBox cmbStation;
-        private System.Windows.Forms.RadioButton radioRain;
-        private System.Windows.Forms.RadioButton radioWater;
-        private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.RadioButton radioButtonSave;
 

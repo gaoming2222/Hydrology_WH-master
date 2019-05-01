@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CReadAndSettingMgrForm));
             this.vRingsNum = new System.Windows.Forms.NumericUpDown();
-            this.vTerminalNum = new System.Windows.Forms.TextBox();
+            this.vClockTime = new System.Windows.Forms.TextBox();
             this.vTimeChoice = new System.Windows.Forms.ComboBox();
             this.vDestPhoneNum = new System.Windows.Forms.TextBox();
             this.chkVersionNum = new System.Windows.Forms.CheckBox();
@@ -195,12 +195,12 @@
             0,
             0});
             // 
-            // vTerminalNum
+            // vClockTime
             // 
-            this.vTerminalNum.Location = new System.Drawing.Point(842, 20);
-            this.vTerminalNum.Name = "vTerminalNum";
-            this.vTerminalNum.Size = new System.Drawing.Size(96, 21);
-            this.vTerminalNum.TabIndex = 81;
+            this.vClockTime.Location = new System.Drawing.Point(842, 20);
+            this.vClockTime.Name = "vClockTime";
+            this.vClockTime.Size = new System.Drawing.Size(96, 21);
+            this.vClockTime.TabIndex = 81;
             // 
             // vTimeChoice
             // 
@@ -1374,7 +1374,7 @@
             this.CommGroupBox.Controls.Add(this.chkViceChannel);
             this.CommGroupBox.Controls.Add(this.ICset);
             this.CommGroupBox.Controls.Add(this.vRingsNum);
-            this.CommGroupBox.Controls.Add(this.vTerminalNum);
+            this.CommGroupBox.Controls.Add(this.vClockTime);
             this.CommGroupBox.Controls.Add(this.vDestPhoneNum);
             this.CommGroupBox.Controls.Add(this.vViceChannel);
             this.CommGroupBox.Controls.Add(this.vMainChannel);
@@ -1532,7 +1532,7 @@
         #endregion
 
         private System.Windows.Forms.NumericUpDown vRingsNum;
-        private System.Windows.Forms.TextBox vTerminalNum;
+        private System.Windows.Forms.TextBox vClockTime;
         private System.Windows.Forms.ComboBox vTimeChoice;
         private System.Windows.Forms.TextBox vDestPhoneNum;
         private System.Windows.Forms.CheckBox chkVersionNum;

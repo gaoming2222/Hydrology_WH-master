@@ -187,8 +187,8 @@ namespace Hydrology.Forms
             if (!m_dgvGprsConfig.Init())
             {
                 //初始化失败
-                //throw new Exception("配置GPRS时，未配置通讯方式和数据协议");
-                MessageBox.Show("配置GPRS时，请先配置GPRS通讯方式和数据协议");
+                
+                MessageBox.Show("配置端口通讯时，请先配置端口通讯方式和数据协议");
                 this.Close();
                 return;
             }

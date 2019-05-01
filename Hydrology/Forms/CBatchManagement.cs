@@ -890,10 +890,6 @@ namespace Hydrology.Forms
 
         private void btn_StartAdjust_Click(object sender, EventArgs e)
         {
-            if (!HasUserOnLine())
-            {
-                return;
-            }
             var listStation = this.m_dgvClock.GetAllSelectedStation();
             List<string> result = new List<string>();
 
@@ -907,49 +903,49 @@ namespace Hydrology.Forms
             for (int i = 0; i < listStation.Count; i++)
             {
                 m_currentStation = listStation[i];
-                string sendMsg = CPortDataMgr.Instance.SendAdjustClockFirst(m_currentStation);
-                //   AddLog(sendMsg);
+                string sendMsg = CPortDataMgr.Instance.SendTcpBatchAdjustClock(m_currentStation);
+                
             }
 
-            System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer()
-            {
-                Interval = 1000
-            };
+            //System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer()
+            //{
+            //    Interval = 1000
+            //};
 
-            int m = 0;
-            timer.Tick += (s1, e1) =>
-            {
-                if (m > 0)
-                {
-                    timer.Stop();
-                    m_currentStation = null;
-                    this.btn_StartAdjust.Enabled = true;
-                    return;
-                }
-                for (int i = 0; i < listStation.Count; i++)
-                {
-                    m_currentStation = listStation[i];
-                    string sendMsg = CPortDataMgr.Instance.SendAdjustClockFirst(m_currentStation);
-                    //    AddLog(sendMsg);
-                }
-                m = 1;
-            };
-            timer.Start();
+            //int m = 0;
+            //timer.Tick += (s1, e1) =>
+            //{
+            //    if (m > 0)
+            //    {
+            //        timer.Stop();
+            //        m_currentStation = null;
+            //        this.btn_StartAdjust.Enabled = true;
+            //        return;
+            //    }
+            //    for (int i = 0; i < listStation.Count; i++)
+            //    {
+            //        m_currentStation = listStation[i];
+            //        string sendMsg = CPortDataMgr.Instance.SendAdjustClockFirst(m_currentStation);
+            //        //    AddLog(sendMsg);
+            //    }
+            //    m = 1;
+            //};
+            //timer.Start();
 
 
-            //显示对时完成
-            System.Windows.Forms.Timer timer_1 = new System.Windows.Forms.Timer()
-            {
-                Interval = 1000 * 60
-            };
-            //  this.label4.Text = "";
-            timer_1.Tick += (s1, e1) =>
-            {
-                this.label4.Text = "对时完成！";
-                AddLog("对时完成！");
-                timer_1.Stop();
-            };
-            timer_1.Start();
+            ////显示对时完成
+            //System.Windows.Forms.Timer timer_1 = new System.Windows.Forms.Timer()
+            //{
+            //    Interval = 1000 * 60
+            //};
+            ////  this.label4.Text = "";
+            //timer_1.Tick += (s1, e1) =>
+            //{
+            //    this.label4.Text = "对时完成！";
+            //    AddLog("对时完成！");
+            //    timer_1.Stop();
+            //};
+            //timer_1.Start();
             m_dgvClock.Show();
         }
 

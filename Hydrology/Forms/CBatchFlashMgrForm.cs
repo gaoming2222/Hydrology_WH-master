@@ -37,7 +37,7 @@ namespace Hydrology.Forms
             dtp_StartTime.Format = DateTimePickerFormat.Custom;
             dtp_StartTime.CustomFormat = "yyyy-MM-dd HH";
             dtp_StartTime.Value = DateTime.Now.AddDays(-1);
-            radioHour.Checked = true;
+            //radioHour.Checked = true;
 
             ReloadComboBox();
             ReloadListView();
@@ -55,7 +55,6 @@ namespace Hydrology.Forms
             this.cmbStation.Name = "cmbStation";
             this.cmbStation.Size = new System.Drawing.Size(167, 20);
             this.cmbStation.TabIndex = 4;
-            //(this.cmbStation as CStationComboBox).StationSelected += new EventHandler<CEventSingleArgs<CEntityStation>>(CReadAndSettingMgrForm_StationSelected);
             this.groupBox2.Controls.Add(this.cmbStation);
         }
         private void ReloadListView()
@@ -116,20 +115,20 @@ namespace Hydrology.Forms
                     //BatchDataImport.Import(result);
                     DateTime DStartTime = new DateTime();
                     DateTime DEndTime = new DateTime();
-                    if (this.radioHour.Checked== true)
-                    {
-                        DateTime tmp = this.dtp_StartTime.Value;
-                        //DateTime tmp_1 = this.dtp_EndTime.Value;
-                        DStartTime = new DateTime(tmp.Year, tmp.Month, tmp.Day, tmp.Hour, 0, 0);
-                        DEndTime = this.dtp_EndTime.Value;
-                    }
-                    else if (this.radioDay.Checked == true)
-                    {
-                        DateTime tmp = this.dtp_StartTime.Value;
-                        DateTime tmp_1 = this.dtp_EndTime.Value;
-                        DStartTime = new DateTime(tmp.Year, tmp.Month, tmp.Day, 8, 0, 0);
-                        DEndTime =new DateTime(tmp_1.Year, tmp_1.Month, tmp_1.Day, 23, 59, 59);
-                    }
+                    //if (this.radioHour.Checked== true)
+                    //{
+                    //    DateTime tmp = this.dtp_StartTime.Value;
+                    //    //DateTime tmp_1 = this.dtp_EndTime.Value;
+                    //    DStartTime = new DateTime(tmp.Year, tmp.Month, tmp.Day, tmp.Hour, 0, 0);
+                    //    DEndTime = this.dtp_EndTime.Value;
+                    //}
+                    //else if (this.radioDay.Checked == true)
+                    //{
+                    //    DateTime tmp = this.dtp_StartTime.Value;
+                    //    DateTime tmp_1 = this.dtp_EndTime.Value;
+                    //    DStartTime = new DateTime(tmp.Year, tmp.Month, tmp.Day, 8, 0, 0);
+                    //    DEndTime =new DateTime(tmp_1.Year, tmp_1.Month, tmp_1.Day, 23, 59, 59);
+                    //}
                     //DateTime DStartTime = this.dtp_StartTime.Value;
                     //DateTime DEndTime = this.dtp_EndTime.Value;
                     if (radioButton2.Checked)
@@ -262,67 +261,37 @@ namespace Hydrology.Forms
             string sid = station.StationID;
 
             var stype = station.StationType;
-            ETrans trans = this.radioHour.Checked ? ETrans.ByHour : ETrans.ByDay;
+            //ETrans trans = this.radioHour.Checked ? ETrans.ByHour : ETrans.ByDay;
             DateTime beginTime = new DateTime();
             DateTime endTime = new DateTime();
-            if (this.radioHour.Checked == true)
-            {
-                DateTime tmp = this.dtp_StartTime.Value;
-                DateTime tmp_1 = this.dtp_EndTime.Value;
-                if (tmp_1.Day != tmp.Day || tmp_1.Year != tmp.Year || tmp_1.Month != tmp.Month)
-                {
-                    MessageBox.Show("按小时查询不能跨日");
-                    return;
-                }
-                beginTime = new DateTime(tmp.Year, tmp.Month, tmp.Day, tmp.Hour, 0, 0);
-                endTime = this.dtp_EndTime.Value;
-            }
-            else if (this.radioDay.Checked == true)
-            {
-                DateTime tmp = this.dtp_StartTime.Value;
-                DateTime tmp_1 = this.dtp_EndTime.Value;
-                if (tmp_1.Year != tmp.Year || tmp_1.Month != tmp.Month)
-                {
-                    MessageBox.Show("按日查询不能跨月");
-                    return;
-                }
-                beginTime = new DateTime(tmp.Year, tmp.Month, tmp.Day, 8, 0, 0);
-                endTime = new DateTime(tmp_1.Year, tmp_1.Month, tmp_1.Day, 8, 0, 0);
-            }
-
-            //DateTime beginTime = this.dtp_StartTime.Value;
-            //DateTime endTime = this.dtp_EndTime.Value;
-            if (beginTime > endTime)
+            DateTime tmp = this.dtp_StartTime.Value;
+            DateTime tmp_1 = this.dtp_EndTime.Value;
+            beginTime = new DateTime(tmp.Year, tmp.Month, tmp.Day, tmp.Hour, 0, 0);
+            endTime = new DateTime(tmp_1.Year, tmp_1.Month, tmp_1.Day, tmp_1.Hour, 0, 0);
+            if (tmp > tmp_1)
             {
                 MessageBox.Show("起始时间不能大于结束时间!");
                 return;
             }
-            station.StationType = radioRain.Checked ? EStationType.ERainFall : EStationType.EHydrology;
+            //string msg1 = beginTime.Year.ToString()
+            //station.StationType = radioRain.Checked ? EStationType.ERainFall : EStationType.EHydrology;
 
             string logMsg = String.Format("--------批量传输    目标站点（{0:D4}）--------- ", int.Parse(sid));
             // 写入系统日志
             CSystemInfoMgr.Instance.AddInfo(logMsg);
             this.listView1.Items.Add(logMsg);
-            string qry = CPortDataMgr.Instance.SendFlashMsg(station, trans, beginTime, endTime, this.m_channelType);
+            string qry = CPortDataMgr.Instance.SendFlashMsg(station, ETrans.ByHour, beginTime, endTime,EChannelType.TCP);
             this.listView1.Items.Add(new ListViewItem()
             {
                 Text = String.Format("[{0}]  发送数据:  {1}", this.m_channelType.ToString(), qry)
             });
         }
-        private void RadioButton_CheckedChanged(object sender, EventArgs e)
+        
+        private void CReadAndSettingMgrForm_StationSelected(object sender, CEventSingleArgs<CEntityStation> e)
         {
-            if (radioHour.Checked)
-            {
-                // 小时选择模式
-                dtp_StartTime.CustomFormat = "yyyy-MM-dd HH";
-                dtp_EndTime.CustomFormat = "yyyy-MM-dd HH";
-            }
-            else
-            {
-                // 整天选择模式
-                dtp_StartTime.CustomFormat = "yyyy-MM-dd";
-                dtp_EndTime.CustomFormat = "yyyy-MM-dd";
-            }
+            var station = e.Value;
+            if (station == null)
+                return;
         }
 
 
@@ -879,6 +848,9 @@ namespace Hydrology.Forms
             }
 
         }
+
+        
+        
     }
 }
 

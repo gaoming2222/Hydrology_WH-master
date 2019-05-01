@@ -159,7 +159,7 @@ namespace Hydrology.Forms
             //  初始化SIM卡号
             this.vTeleNum.Text = string.Empty;
             //  初始化终端机号
-            this.vTerminalNum.Text = string.Empty;
+            this.vClockTime.Text = string.Empty;
             //  初始化响应波束
             this.ICset.Text = string.Empty;
             //  初始化振铃次数
@@ -508,7 +508,7 @@ namespace Hydrology.Forms
                                 this.waterState.Text = waterState;
                                 this.flowState.Text = flowState;
                                 this.qualityState.Text = qualityState;
-                                this.waterInsState.Text = waterInsState;
+                                this.flowInsState.Text = flowInsState;
                                 this.waterInsState.Text = waterInsState;
                                 this.boxState.Text = boxState;
                                 this.memoryState.Text = memoryState;
@@ -521,6 +521,7 @@ namespace Hydrology.Forms
                                 HighlightControl(this.waterState);
                                 HighlightControl(this.flowState);
                                 HighlightControl(this.qualityState);
+                                HighlightControl(this.flowInsState);
                                 HighlightControl(this.waterInsState);
                                 HighlightControl(this.boxState);
                                 HighlightControl(this.memoryState);
@@ -542,6 +543,20 @@ namespace Hydrology.Forms
                             });
                         }
                         catch (Exception exp) { Debug.WriteLine(exp.Message); }
+                    }
+                    if(info.Time != null && info.Time.Year > 1900)
+                    {
+
+                        try
+                        {
+                            this.vClockTime.Invoke((Action)delegate
+                            {
+                                string a = info.Time.ToString();
+                                this.vClockTime.Text = info.Time.ToString();
+                                HighlightControl(this.vClockTime);
+                            });
+                        }
+                        catch (Exception e7) { }
                     }
                     //if (info.MainChannel.HasValue && info.ViceChannel.HasValue)
                     //{
@@ -1468,7 +1483,7 @@ namespace Hydrology.Forms
                 if (this.chkTerminalNum.Checked)
                 {
                     cmds.Add(EDownParam.TerminalNum);
-                    string temp = this.vTerminalNum.Text.Trim();
+                    string temp = this.vClockTime.Text.Trim();
                     if (!CStringUtil.IsDigit(temp))
                     {
                         MessageBox.Show("终端机号 所有位必须全部为数字!");

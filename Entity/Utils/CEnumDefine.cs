@@ -34,8 +34,10 @@ namespace Hydrology.Entity
         ESoilHydrology = 6, //  07，17墒情水文站
         EH = 7,//河道站
         RE = 8,//水库（湖泊）站
-        GT = 9,//闸坝站
-        RP = 10 // 泵站
+        GT = 9,//涵闸站
+        RP = 10,// 泵站
+       
+
     }
 
     public enum EStationTypeProto
@@ -458,7 +460,7 @@ namespace Hydrology.Entity
         public static readonly string CS_EStationType_ERiverWater_UIStr = "水位站";
         public static readonly string CS_EStationType_ERiverWater_DBStr = "1";
 
-        public static readonly string CS_EStationType_EHydrology_UIStr = "水文站";
+        public static readonly string CS_EStationType_EHydrology_UIStr = "港渠站";
         public static readonly string CS_EStationType_EHydrology_DBStr = "2";
 
         public static readonly string CS_EStationType_ESoil_UIStr = "墒情站";
@@ -479,7 +481,7 @@ namespace Hydrology.Entity
         public static readonly string CS_EStationType_SK_UIStr = "水库（湖泊）";
         public static readonly string CS_EStationType_SK_DBStr = "8";
 
-        public static readonly string CS_EStationType_ZB_UIStr = "闸坝";
+        public static readonly string CS_EStationType_ZB_UIStr = "涵闸";
         public static readonly string CS_EStationType_ZB_DBStr = "9";
 
         public static readonly string CS_EStationType_BZ_UIStr = "泵站";

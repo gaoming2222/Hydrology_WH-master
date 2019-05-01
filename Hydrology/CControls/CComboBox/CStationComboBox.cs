@@ -254,9 +254,7 @@ namespace Hydrology.CControls
             var lists = CDBDataMgr.Instance.GetAllStation();
             foreach (var station in lists)
             {
-                if ((station.StationType == EStationType.EHydrology
-                        || station.StationType == EStationType.ERainFall
-                        || station.StationType == EStationType.ERiverWater))
+                if (station.StationType != EStationType.ESoil)
                 {
                     m_listStations.Add(station);
                     //this.Items.Add(GetDisplayStationName(station));

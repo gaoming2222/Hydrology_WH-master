@@ -79,7 +79,7 @@ namespace Hydrology.CControls
         public bool Init()
         {
             // 判断是否有信道协议
-            if (m_listProtocolGprs.Count <= 0 || m_listProtocolData.Count <= 0)
+            if (m_listProtocolTransparen.Count <= 0 || m_listProtocolTransparen.Count <= 0)
             {
                 //MessageBox.Show("请先配置GPRS通讯方式和数据协议");
                 return false;

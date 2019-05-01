@@ -16,6 +16,7 @@ namespace Hydrology.DBManager.DB.SQLServer
     public class CSQLCurrenData : CSQLBase, ICurrentDataProxy
     {
         #region 数据成员
+        private string urlPrefix = "127.0.0.1:8088";
         private const string CT_EntityName = "CEntityData";   //  数据库表Rain实体类
         public static readonly string CT_TableName = "CurrentData";
         public static readonly string CN_CName = "CName"; //站点名字
@@ -72,6 +73,13 @@ namespace Hydrology.DBManager.DB.SQLServer
             m_addTimer_1.Elapsed += new System.Timers.ElapsedEventHandler(EHTimer_1);
             m_addTimer_1.Enabled = false;
             m_addTimer_1.Interval = CDBParams.GetInstance().AddToDbDelay;
+
+
+            if (XmlHelper.urlDic == null || XmlHelper.urlDic.Count == 0)
+            {
+                XmlHelper.getXMLInfo();
+            }
+            urlPrefix = XmlHelper.urlDic["ip"];
         }
 
         /// <summary>
@@ -91,41 +99,95 @@ namespace Hydrology.DBManager.DB.SQLServer
         // 添加新列
         public void AddNewRow(CEntityRealTime realtime)
         {
-            // 记录超过1000条，或者时间超过1分钟，就将当前的数据写入数据库
-            m_mutexDataTable.WaitOne(); //等待互斥量
-            DataRow row = m_tableDataAdded.NewRow();
-            row[CN_CName] = realtime.StrStationName;
-            row[CN_StationId] = realtime.StrStationID;
-            row[CN_StationType] = realtime.EIStationType;
-            row[CN_YesterdayRain] = realtime.LastDayRainFall;
-            row[CN_TodayRain] = realtime.DDayRainFall;
-            row[CN_PeriodRain] = realtime.DPeriodRain;
-            row[CN_WaterStage] = realtime.DWaterYield;
-            row[CN_WaterFlow] = realtime.DWaterFlowActual;
-            row[CN_Voltage] = realtime.Dvoltage;
-            row[CN_DataState] = realtime.ERTDState;
-            row[CN_MsgType] = CEnumHelper.MessageTypeToDBStr(realtime.EIMessageType);
-            row[CN_TransType] = CEnumHelper.ChannelTypeToDBStr(realtime.EIChannelType);
-            row[CN_DataTime] = realtime.TimeDeviceGained.ToString(CDBParams.GetInstance().DBDateTimeFormat);
-
-            m_tableDataAdded.Rows.Add(row);
-            m_mutexDataTable.ReleaseMutex();
-
-            // 判断是否需要创建新分区
-            //CSQLPartitionMgr.Instance.MaintainVoltage(voltage.TimeCollect);
-            if (m_tableDataAdded.Rows.Count >= CDBParams.GetInstance().AddBufferMax)
+            if (realtime == null)
             {
-                // 如果超过最大值，写入数据库
-                NewTask(() => { AddDataToDB(); });
+                return;
             }
-            else
+            List<CEntityRealTime> realTimeList = new List<CEntityRealTime>();
+            realTimeList.Add(realtime);
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            string suffix = "/currentdata/insertCurrentdataCS";
+            string url = "http://" + urlPrefix + suffix;
+            Newtonsoft.Json.Converters.IsoDateTimeConverter timeConverter = new Newtonsoft.Json.Converters.IsoDateTimeConverter();
+            //这里使用自定义日期格式，如果不使用的话，默认是ISO8601格式
+            timeConverter.DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+            string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(realTimeList, Newtonsoft.Json.Formatting.None, timeConverter);
+            param["currentdata"] = jsonStr;
+            try
             {
-                // 没有超过缓存最大值，开启定时器进行检测,多次调用Start()会导致重新计数
-                m_addTimer.Start();
+                string resultJson = HttpHelper.Post(url, param);
+                CDBLog.Instance.AddInfo(string.Format("添加{0}行到雨量表", realTimeList.Count));
             }
+            catch (Exception e)
+            {
+                Debug.WriteLine("添加雨量信息失败");
+            }
+            //// 记录超过1000条，或者时间超过1分钟，就将当前的数据写入数据库
+            //m_mutexDataTable.WaitOne(); //等待互斥量
+            //DataRow row = m_tableDataAdded.NewRow();
+            //row[CN_CName] = realtime.StrStationName;
+            //row[CN_StationId] = realtime.StrStationID;
+            //row[CN_StationType] = realtime.EIStationType;
+            //row[CN_YesterdayRain] = realtime.LastDayRainFall;
+            //row[CN_TodayRain] = realtime.DDayRainFall;
+            //row[CN_PeriodRain] = realtime.DPeriodRain;
+            //row[CN_WaterStage] = realtime.DWaterYield;
+            //row[CN_WaterFlow] = realtime.DWaterFlowActual;
+            //row[CN_Voltage] = realtime.Dvoltage;
+            //row[CN_DataState] = realtime.ERTDState;
+            //row[CN_MsgType] = CEnumHelper.MessageTypeToDBStr(realtime.EIMessageType);
+            //row[CN_TransType] = CEnumHelper.ChannelTypeToDBStr(realtime.EIChannelType);
+            //row[CN_DataTime] = realtime.TimeDeviceGained.ToString(CDBParams.GetInstance().DBDateTimeFormat);
+
+            //m_tableDataAdded.Rows.Add(row);
+            //m_mutexDataTable.ReleaseMutex();
+
+            //// 判断是否需要创建新分区
+            ////CSQLPartitionMgr.Instance.MaintainVoltage(voltage.TimeCollect);
+            //if (m_tableDataAdded.Rows.Count >= CDBParams.GetInstance().AddBufferMax)
+            //{
+            //    // 如果超过最大值，写入数据库
+            //    NewTask(() => { AddDataToDB(); });
+            //}
+            //else
+            //{
+            //    // 没有超过缓存最大值，开启定时器进行检测,多次调用Start()会导致重新计数
+            //    m_addTimer.Start();
+            //}
         }
 
-
+        public bool UpdateRow(CEntityRealTime realtime)
+        {
+            bool result = false;
+            if (realtime == null)
+            {
+                return true;
+            }
+            List<CEntityRealTime> realTimeList = new List<CEntityRealTime>();
+            realTimeList.Add(realtime);
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            string suffix = "/currentdata/updateCurrentdataCS";
+            string url = "http://" + urlPrefix + suffix;
+            Newtonsoft.Json.Converters.IsoDateTimeConverter timeConverter = new Newtonsoft.Json.Converters.IsoDateTimeConverter();
+            //这里使用自定义日期格式，如果不使用的话，默认是ISO8601格式
+            timeConverter.DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+            string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(realTimeList, Newtonsoft.Json.Formatting.None, timeConverter);
+            param["currentdata"] = jsonStr;
+            try
+            {
+                string resultJson = HttpHelper.Post(url, param);
+                if(resultJson == "1")
+                {
+                    result = true;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("更新实时数据表失败");
+                return false;
+            }
+            return result;
+        }
         public void AddNewRows(List<CEntityRealTime> realtimes)
         {
             // 记录超过1000条，或者时间超过1分钟，就将当前的数据写入数据库

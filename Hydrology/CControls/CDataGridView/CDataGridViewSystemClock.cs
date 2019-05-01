@@ -207,6 +207,7 @@ namespace Hydrology.CControls
                    // CS_OnlineOrOffline,
                     CS_CurrentState,
                 };
+            this.Columns[5].Visible = false;
             var delCol = new DataGridViewCheckBoxColumn();
             base.SetColumnEditStyle(0, delCol);
 

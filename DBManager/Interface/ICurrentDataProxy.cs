@@ -27,5 +27,7 @@ namespace Hydrology.DBManager.Interface
         /// <param name="rains"></param>
         /// <returns></returns>
         bool UpdateRows(List<CEntityRealTime> realtimes);
+
+        bool UpdateRow(CEntityRealTime realtime);
     }
 }

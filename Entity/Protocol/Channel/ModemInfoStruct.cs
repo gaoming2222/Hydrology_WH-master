@@ -7,6 +7,10 @@ namespace Hydrology.Entity
     public struct ModemInfoStruct
     {
         /// <summary>
+        /// 站点ID
+        /// </summary>
+        public string stationid;
+        /// <summary>
         /// Modem模块的ID号
         /// </summary>
         public uint m_modemId;

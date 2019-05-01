@@ -97,6 +97,8 @@ namespace Hydrology.DBManager.DB.SQLServer
         }
 
         public System.Timers.Timer m_addTimer_1;
+        public System.Timers.Timer m_addTimer_2;
+        List<CEntityVoltage> batchInsertVoltageList = new List<CEntityVoltage>();
         #endregion ///<PRIVATE_DATAMEMBER
 
         #region 公共方法
@@ -122,6 +124,14 @@ namespace Hydrology.DBManager.DB.SQLServer
             m_addTimer_1.Elapsed += new System.Timers.ElapsedEventHandler(EHTimer_1);
             m_addTimer_1.Enabled = false;
             m_addTimer_1.Interval = CDBParams.GetInstance().AddToDbDelay;
+
+
+            m_addTimer_2 = new System.Timers.Timer();
+            m_addTimer_2.Elapsed += new System.Timers.ElapsedEventHandler(EHTimer_2);
+            m_addTimer_2.Enabled = false;
+            m_addTimer_2.Interval = CDBParams.GetInstance().AddToDbDelay;
+            //m_addTimer_2.Interval = 15 * 1000 * 60;
+            m_addTimer_2.Start();
             if (XmlHelper.urlDic == null || XmlHelper.urlDic.Count == 0)
             {
                 XmlHelper.getXMLInfo();
@@ -141,6 +151,16 @@ namespace Hydrology.DBManager.DB.SQLServer
             m_dateTimePreAddTime = DateTime.Now;
             //将数据写入数据库
             NewTask(() => { InsertSqlBulk(m_tableDataAdded); });
+        }
+
+        protected virtual void EHTimer_2(object source, System.Timers.ElapsedEventArgs e)
+        {
+            //定时器事件，将所有的记录都写入数据库
+            m_addTimer_2.Stop();  //停止定时器
+            m_dateTimePreAddTime = DateTime.Now;
+            //将数据写入数据库
+            NewTask(() => { BatchInsert(); });
+            m_addTimer_2.Start();
         }
 
         // 添加新列
@@ -210,27 +230,30 @@ namespace Hydrology.DBManager.DB.SQLServer
         {
             if (voltages.Count <= 0)
             {
+                return;
             }
-            Dictionary<string, object> param = new Dictionary<string, object>();
-            string suffix = "/voltage/insertVoltage";
-            string url = "http://" + urlPrefix + suffix;
-            //string url = "http://127.0.0.1:8088/voltage/insertVoltage";
-            Newtonsoft.Json.Converters.IsoDateTimeConverter timeConverter = new Newtonsoft.Json.Converters.IsoDateTimeConverter();
-            //这里使用自定义日期格式，如果不使用的话，默认是ISO8601格式
-            timeConverter.DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
-            string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(voltages, Newtonsoft.Json.Formatting.None, timeConverter);
-            //string jsonStr = HttpHelper.ObjectToJson(voltages);
-            //param["voltage"] = "[{\"ChannelType\":6,\"MessageType\":1,\"StationID\":\"0229\",\"TimeCollect\":\"2019-3-13 18:00:00\",\"TimeRecieved\":\"2019-3-13 18:15:00\",\"Voltage\":4,\"VoltageID\":0,\"state\":1,\"type\":null}]";
-            param["voltage"] = jsonStr;
-            try
-            {
-                string resultJson = HttpHelper.Post(url, param);
-                CDBLog.Instance.AddInfo(string.Format("添加{0}行到电压表", voltages.Count));
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("添加电压信息失败");
-            }
+            batchInsertVoltageList.AddRange(voltages);
+
+            //Dictionary<string, object> param = new Dictionary<string, object>();
+            //string suffix = "/voltage/insertVoltage";
+            //string url = "http://" + urlPrefix + suffix;
+            ////string url = "http://127.0.0.1:8088/voltage/insertVoltage";
+            //Newtonsoft.Json.Converters.IsoDateTimeConverter timeConverter = new Newtonsoft.Json.Converters.IsoDateTimeConverter();
+            ////这里使用自定义日期格式，如果不使用的话，默认是ISO8601格式
+            //timeConverter.DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+            //string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(voltages, Newtonsoft.Json.Formatting.None, timeConverter);
+            ////string jsonStr = HttpHelper.ObjectToJson(voltages);
+            ////param["voltage"] = "[{\"ChannelType\":6,\"MessageType\":1,\"StationID\":\"0229\",\"TimeCollect\":\"2019-3-13 18:00:00\",\"TimeRecieved\":\"2019-3-13 18:15:00\",\"Voltage\":4,\"VoltageID\":0,\"state\":1,\"type\":null}]";
+            //param["voltage"] = jsonStr;
+            //try
+            //{
+            //    string resultJson = HttpHelper.Post(url, param);
+            //    CDBLog.Instance.AddInfo(string.Format("添加{0}行到电压表", voltages.Count));
+            //}
+            //catch (Exception e)
+            //{
+            //    Debug.WriteLine("添加电压信息失败");
+            //}
             //// 记录超过1000条，或者时间超过1分钟，就将当前的数据写入数据库
             //m_mutexDataTable.WaitOne(); //等待互斥量
             //foreach (CEntityVoltage voltage in voltages)
@@ -699,6 +722,121 @@ namespace Hydrology.DBManager.DB.SQLServer
             return;
         }
 
+
+        protected void BatchInsert()
+        {
+            if (batchInsertVoltageList == null || batchInsertVoltageList.Count == 0)
+            {
+                return;
+            }
+            List<CEntityVoltage> voltageList = new List<CEntityVoltage>();
+            lock (batchInsertVoltageList)
+            {
+                voltageList.AddRange(batchInsertVoltageList);
+                batchInsertVoltageList.Clear();
+            }
+
+            if (voltageList.Count <= 500)
+            {
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                string suffix = "/voltage/insertVoltage";
+                string url = "http://" + urlPrefix + suffix;
+                //string url = "http://127.0.0.1:8088/voltage/insertVoltage";
+                Newtonsoft.Json.Converters.IsoDateTimeConverter timeConverter = new Newtonsoft.Json.Converters.IsoDateTimeConverter();
+                //这里使用自定义日期格式，如果不使用的话，默认是ISO8601格式
+                timeConverter.DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+                string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(voltageList, Newtonsoft.Json.Formatting.None, timeConverter);
+                //string jsonStr = HttpHelper.ObjectToJson(voltages);
+                //param["voltage"] = "[{\"ChannelType\":6,\"MessageType\":1,\"StationID\":\"0229\",\"TimeCollect\":\"2019-3-13 18:00:00\",\"TimeRecieved\":\"2019-3-13 18:15:00\",\"Voltage\":4,\"VoltageID\":0,\"state\":1,\"type\":null}]";
+                param["voltage"] = jsonStr;
+                try
+                {
+                    string resultJson = HttpHelper.Post(url, param);
+                    CDBLog.Instance.AddInfo(string.Format("添加{0}行到电压表", voltageList.Count));
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine("添加电压信息失败");
+                    CDBLog.Instance.AddInfo(string.Format("添加电压信息失败！", voltageList.Count));
+                    return;
+                }
+                finally
+                {
+                    voltageList.Clear();
+                }
+            }
+            else
+            {
+                CDBLog.Instance.AddInfo(string.Format("数据量大于500条，则分批插入", voltageList.Count));
+                List<CEntityVoltage> voltages = new List<CEntityVoltage>();
+
+                for (int i = 0; i < voltageList.Count; i++)
+                {
+                    voltages.Add(voltageList[i]);
+                    if ((i+1) % 500 == 0)
+                    {
+                        Dictionary<string, object> param = new Dictionary<string, object>();
+                        string suffix = "/voltage/insertVoltage";
+                        string url = "http://" + urlPrefix + suffix;
+                        //string url = "http://127.0.0.1:8088/voltage/insertVoltage";
+                        Newtonsoft.Json.Converters.IsoDateTimeConverter timeConverter = new Newtonsoft.Json.Converters.IsoDateTimeConverter();
+                        //这里使用自定义日期格式，如果不使用的话，默认是ISO8601格式
+                        timeConverter.DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+                        string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(voltages, Newtonsoft.Json.Formatting.None, timeConverter);
+                        //string jsonStr = HttpHelper.ObjectToJson(voltages);
+                        //param["voltage"] = "[{\"ChannelType\":6,\"MessageType\":1,\"StationID\":\"0229\",\"TimeCollect\":\"2019-3-13 18:00:00\",\"TimeRecieved\":\"2019-3-13 18:15:00\",\"Voltage\":4,\"VoltageID\":0,\"state\":1,\"type\":null}]";
+                        param["voltage"] = jsonStr;
+                        try
+                        {
+                            string resultJson = HttpHelper.Post(url, param);
+                            CDBLog.Instance.AddInfo(string.Format("添加{0}行到电压表", voltages.Count));
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.WriteLine("添加电压信息失败");
+                            CDBLog.Instance.AddInfo(string.Format("添加电压信息失败！", voltages.Count));
+                            return;
+
+                        }
+                        finally
+                        {
+                            voltages.Clear();
+                        }
+                    }
+                    if (i == voltageList.Count - 1)
+                    {
+                        Dictionary<string, object> param = new Dictionary<string, object>();
+                        string suffix = "/voltage/insertVoltage";
+                        string url = "http://" + urlPrefix + suffix;
+                        //string url = "http://127.0.0.1:8088/voltage/insertVoltage";
+                        Newtonsoft.Json.Converters.IsoDateTimeConverter timeConverter = new Newtonsoft.Json.Converters.IsoDateTimeConverter();
+                        //这里使用自定义日期格式，如果不使用的话，默认是ISO8601格式
+                        timeConverter.DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+                        string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(voltages, Newtonsoft.Json.Formatting.None, timeConverter);
+                        //string jsonStr = HttpHelper.ObjectToJson(voltages);
+                        //param["voltage"] = "[{\"ChannelType\":6,\"MessageType\":1,\"StationID\":\"0229\",\"TimeCollect\":\"2019-3-13 18:00:00\",\"TimeRecieved\":\"2019-3-13 18:15:00\",\"Voltage\":4,\"VoltageID\":0,\"state\":1,\"type\":null}]";
+                        param["voltage"] = jsonStr;
+                        try
+                        {
+                            string resultJson = HttpHelper.Post(url, param);
+                            CDBLog.Instance.AddInfo(string.Format("添加{0}行到电压表", voltages.Count));
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.WriteLine("添加电压信息失败");
+                            CDBLog.Instance.AddInfo(string.Format("添加电压信息失败！", voltages.Count));
+                            return;
+                        }
+                        finally
+                        {
+                            voltages.Clear();
+                            voltageList.Clear();
+                        }
+                    }
+                }
+                return;
+            }
+        }
         protected void BulkTableCopy(string tname, DataTable dt)
         {
             try

@@ -104,7 +104,7 @@ namespace Hydrology.DataMgr
 
                 CSystemInfoMgr.Instance.AddInfo(string.Format("配置...grpcServer...完成!"));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 CSystemInfoMgr.Instance.AddInfo(string.Format("配置...grpcServer...失败!"));
             }
@@ -654,17 +654,19 @@ namespace Hydrology.DataMgr
             {
                 for (int i = 0; i < stateList.Count(); i++)
                 {
-
-                    if(stateList[i].m_modemId != 0)
+                    //string uid = ((uint)stateList[i].m_modemId).ToString("X").PadLeft(8, '0');
+                    string uid = stateList[i].m_modemId.ToString();
+                    if(uid != null && uid != "" && uid != "0")
                     {
-                        string uid = stateList[i].m_modemId.ToString();
-                        for(int j = uid.Length; j < 10; j++)
+                        for (int j = uid.Length; j < 10; j++)
                         {
                             uid = "0" + uid;
                         }
-                        gprsDic.Add(uid, stateList[i]);
+                        if (!gprsDic.ContainsKey(uid))
+                        {
+                            gprsDic.Add(uid, stateList[i]);
+                        }
                     }
-                    
                 }
             }
 
@@ -677,16 +679,20 @@ namespace Hydrology.DataMgr
                         if (gprsDic.ContainsKey(s.StationID))
                         {
                             Dtu dtu = new Dtu();
-
                             ModemInfoStruct state = gprsDic[s.StationID];
-                            string phoneno = "--";
+                            //string phoneno = CGprsUtil.Byte11ToPhoneNO(state.m_phoneno, 0);
+                            string phoneno = "";
                             if (state.m_phoneno != null)
                             {
-                                phoneno = CGprsUtil.Byte11ToPhoneNO(state.m_phoneno, 0);
+                                phoneno = state.m_phoneno.ToString();
                             }
-                            string dynIP = CGprsUtil.Byte4ToIP(state.m_dynip, 0);
+                            
+                            //string dynIP = CGprsUtil.Byte4ToIP(state.m_dynip, 0);
+                            string dynIP = state.m_dynip.ToString();
                             string connectTime = CGprsUtil.ULongToDatetime(state.m_conn_time).ToString();
+                            //string connectTime = state.m_conn_time.ToString();
                             string refreshTime = CGprsUtil.ULongToDatetime(state.m_refresh_time).ToString();
+                            //string refreshTime = state.m_refresh_time.ToString();
 
                             dtu.SubcenterId = s.SubCenterID.ToString();
                             string subName = CDBDataMgr.Instance.GetSubCenterName(s.SubCenterID.ToString());
@@ -702,19 +708,19 @@ namespace Hydrology.DataMgr
                             dtu.StationType = CEnumHelper.StationTypeToDBStr(s.StationType);
                             dtuList.Dtu.Add(dtu);
                         }
-                    }
-                    else
-                    {
-                        Dtu dtu = new Dtu();
-                        dtu.SubcenterId = s.SubCenterID.ToString();
-                        string subName = CDBDataMgr.Instance.GetSubCenterName(s.SubCenterID.ToString());
-                        dtu.SubcenterName = subName;
-                        dtu.StationId = s.StationID;
-                        dtu.StationName = s.StationName;
-                        dtu.GprsId = s.StationID;
-                        dtu.State = "2";
-                        dtu.StationType = CEnumHelper.StationTypeToDBStr(s.StationType);
-                        dtuList.Dtu.Add(dtu);
+                        else
+                        {
+                            Dtu dtu = new Dtu();
+                            dtu.SubcenterId = s.SubCenterID.ToString();
+                            string subName = CDBDataMgr.Instance.GetSubCenterName(s.SubCenterID.ToString());
+                            dtu.SubcenterName = subName;
+                            dtu.StationId = s.StationID;
+                            dtu.StationName = s.StationName;
+                            dtu.GprsId = s.GPRS;
+                            dtu.State = "2";
+                            dtu.StationType = CEnumHelper.StationTypeToDBStr(s.StationType);
+                            dtuList.Dtu.Add(dtu);
+                        }
                     }
                 }
             }

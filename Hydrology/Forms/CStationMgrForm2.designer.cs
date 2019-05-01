@@ -237,9 +237,9 @@
             this.label27.AutoSize = true;
             this.label27.Location = new System.Drawing.Point(273, 70);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(101, 12);
+            this.label27.Size = new System.Drawing.Size(77, 12);
             this.label27.TabIndex = 84;
-            this.label27.Text = "北斗卫星成员号：";
+            this.label27.Text = "中心站地址：";
             // 
             // textBox_Beidou
             // 
@@ -253,9 +253,9 @@
             this.label24.AutoSize = true;
             this.label24.Location = new System.Drawing.Point(29, 70);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(101, 12);
+            this.label24.Size = new System.Drawing.Size(65, 12);
             this.label24.TabIndex = 82;
-            this.label24.Text = "北斗卫星终端号：";
+            this.label24.Text = "设备密码：";
             // 
             // textBox_GPRS
             // 
@@ -640,7 +640,6 @@
             this.label6.Size = new System.Drawing.Size(53, 12);
             this.label6.TabIndex = 82;
             this.label6.Text = "备信道：";
-          
             // 
             // label5
             // 
@@ -650,7 +649,6 @@
             this.label5.Size = new System.Drawing.Size(53, 12);
             this.label5.TabIndex = 81;
             this.label5.Text = "主信道：";
-           
             // 
             // cmb_SubCenter
             // 
@@ -666,9 +664,9 @@
             this.label32.AutoSize = true;
             this.label32.Location = new System.Drawing.Point(29, 73);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(77, 12);
+            this.label32.Size = new System.Drawing.Size(65, 12);
             this.label32.TabIndex = 79;
-            this.label32.Text = "所属分中心：";
+            this.label32.Text = "所属中心：";
             // 
             // label3
             // 
@@ -734,7 +732,6 @@
             this.MinimizeBox = false;
             this.Name = "CStationMgrForm2";
             this.Text = "测站管理";
-           
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);

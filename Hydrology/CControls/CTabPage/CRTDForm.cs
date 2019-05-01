@@ -270,14 +270,14 @@ namespace Hydrology.CControls
 
         private void EHTimer(object sender, System.Timers.ElapsedEventArgs e)
         {
-            // 每十分钟刷新界面
-            // 切换数据库时，会清空RTD数据
-            bool result = (m_dgvAllPage.DataGrid as CDataGridViewRTD).RefreshRTDTimeOutStatus();
-            foreach (KeyValuePair<int, CDataGridTabPage> entity in m_mapSubCenterPage)
-            {
-                result = result && (entity.Value.DataGrid as CDataGridViewRTD).RefreshRTDTimeOutStatus();
-            }
-            CSystemInfoMgr.Instance.AddInfo("刷新实时数据状态");
+            //// 每十分钟刷新界面
+            //// 切换数据库时，会清空RTD数据
+            //bool result = (m_dgvAllPage.DataGrid as CDataGridViewRTD).RefreshRTDTimeOutStatus();
+            //foreach (KeyValuePair<int, CDataGridTabPage> entity in m_mapSubCenterPage)
+            //{
+            //    result = result && (entity.Value.DataGrid as CDataGridViewRTD).RefreshRTDTimeOutStatus();
+            //}
+            //CSystemInfoMgr.Instance.AddInfo("刷新实时数据状态");
         }
 
         private void EHFormClosing(object sender, FormClosingEventArgs e)

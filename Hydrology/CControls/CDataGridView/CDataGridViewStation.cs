@@ -34,9 +34,8 @@ namespace Hydrology.CControls
         public static readonly string CS_RChange = "雨量阀值";
         public static readonly string CS_Gsm = "GSM号码";
         public static readonly string CS_Gprs = "GPRS号码";
-        public static readonly string CS_BDsatellite = "北斗卫星终端号";
-        public static readonly string CS_BDmember = "北斗卫星成员号";
-        // public static readonly string CS_V30 = "北斗号码";
+        public static readonly string CS_BDsatellite = "设备密码";
+        public static readonly string CS_BDmember = "中心站地址";
         public static readonly string CS_M30 = "电压阀值";
         public static readonly string CS_Maintran = "主信道";
         public static readonly string CS_Subtran = "备信道";
@@ -338,7 +337,7 @@ namespace Hydrology.CControls
                         Station.Watersensor = base.Rows[m_listEditedRows[i]].Cells[CS_Watersensor].Value.ToString();
                         Station.Reportinterval = base.Rows[m_listEditedRows[i]].Cells[CS_Reportinterval].Value.ToString();
                     }
-                    else if (Station.StationType == EStationType.EHydrology || Station.StationType == EStationType.EH)
+                    else
                     {
                         Station.DWaterBase = CStringFromatHelper.ConvertToNullableDecimal(base.Rows[m_listEditedRows[i]].Cells[CS_WBase].Value.ToString());
                         Station.DWaterMax = CStringFromatHelper.ConvertToNullableDecimal(base.Rows[m_listEditedRows[i]].Cells[CS_WMax].Value.ToString());
@@ -346,7 +345,6 @@ namespace Hydrology.CControls
                         Station.DWaterChange = CStringFromatHelper.ConvertToNullableDecimal(base.Rows[m_listEditedRows[i]].Cells[CS_Change].Value.ToString());
                         try
                         {
-                            //Station.DRainAccuracy = float.Parse(base.Rows[m_listEditedRows[i]].Cells[CS_RAccuracy].Value.ToString());
                             Station.DRainAccuracy = 1f;
                         }
 #pragma warning disable CS0168 // 声明了变量“e”，但从未使用过
@@ -441,10 +439,12 @@ namespace Hydrology.CControls
                     cmb_StationType.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
                     //// 初始化站点类型
-                    cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.ERainFall));
-                    cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.ERiverWater));
                     cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.EHydrology));
                     cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.EH));
+                    cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.GT));
+                    cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.RE));
+                    cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.RP));
+                    cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.ERiverWater));
                     base.SetColumnEditStyle(listHeader.IndexOf(CS_Stationtype), cmb_StationType);
 
 
@@ -1086,7 +1086,7 @@ namespace Hydrology.CControls
                         "无", s.Reportinterval.ToString()
                                         }, EDataState.ENormal);
                     }
-                    else if (s.StationType == EStationType.EHydrology || s.StationType == EStationType.EH)
+                    else
                     {
                         base.AddRow(new string[]
                     {

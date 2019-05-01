@@ -11,6 +11,7 @@ using System.Threading;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Timers;
+using Hydrology.DBManager;
 
 namespace Hydrology.DataMgr
 {
@@ -233,7 +234,34 @@ namespace Hydrology.DataMgr
             return query;
         }
 
-
+        public String SendTcpBatchAdjustClock(CEntityStation station)
+        {
+            string stationID = station.StationID;
+            string query = string.Empty;
+            var tcp = FindTcpByUserid(stationID);
+            if (tcp != null)
+            {
+                //uint dtuID = 0;
+                if (tcp.getSessionIdbyStationid(stationID) != null && tcp.getSessionIdbyStationid(stationID) != "0")
+                {
+                    //TODO
+                    query = tcp.Down.BuildSet(station.StationID, new List<EDownParamGY>() { EDownParamGY.clockset }, null, EChannelType.TCP);
+                    tcp.SendData(stationID, query);
+                }
+                //1109
+                else
+                {
+                    //MessageBox.Show("站点" + stationID + "当前不在线！");
+                    CDBLog.Instance.AddInfo(string.Format("站点" + stationID + "当前不在线！"));
+                }
+            }
+            else
+            {
+                //MessageBox.Show("站点" + stationID + "当前不在线！");
+                CDBLog.Instance.AddInfo(string.Format("站点" + stationID + "当前不在线！"));
+            }
+            return query;
+        }
 
         public String GroupStorageWater(CEntityStation station)
         {
@@ -610,6 +638,8 @@ namespace Hydrology.DataMgr
                 return SendGprsFlash(id, stationID, stype, trans, beginTime, endTime);
             else if (ctype == EChannelType.GSM)
                 return SendGsmFlash(id, stationID, stype, trans, beginTime, endTime);
+            else if (ctype == EChannelType.TCP)
+                return SendTcpFlash(id, stationID, stype, trans, beginTime, endTime);
             return query;
         }
         public String SendFlashMsg(CEntityStation station, ETrans trans, DateTime beginTime, DateTime endTime, EChannelType ctype)
@@ -621,6 +651,7 @@ namespace Hydrology.DataMgr
                 case EChannelType.GSM: id = station.GSM; break;
                 //   case EChannelType.PSTN: id = station.PSTV; break;
                 case EChannelType.BeiDou: id = station.BDSatellite; break;
+                case EChannelType.TCP: id = ""; break;
                 default: throw new Exception("通讯方式参数错误！");
             }
             return SendFlashMsg(id, station.StationID, station.StationType, trans, beginTime, endTime, ctype);
@@ -785,20 +816,7 @@ namespace Hydrology.DataMgr
             return gprs;
         }
 
-        public ITransparen FindTcpByUserid(string stationId)
-        {
-            ITransparen tcp = null;
-            foreach (var item in this.m_TransparenLists)
-            {
-               
-                if (item.getSessionIdbyStationid(stationId) != "0")
-                {
-                    tcp = item;
-                    break;
-                }
-            }
-            return tcp;
-        }
+        
 
 
 
@@ -959,33 +977,7 @@ namespace Hydrology.DataMgr
             return query;
         }
 
-        public String SendTcpRead(string userid, string stationID, IList<EDownParamGY> cmds)
-        {
-            string query = string.Empty;
-            var tcp = FindTcpByUserid(stationID);
-            if (tcp != null)
-            {
-                //uint dtuID = 0;
-                if (tcp.getSessionIdbyStationid(stationID) != "0")
-                {
-                    //TODO
-                    query = tcp.Down.BuildQuery(stationID, cmds, EChannelType.TCP);
-                    tcp.SendData(stationID, query);
-                    
-
-                }
-                //1109
-                else
-                {
-                    MessageBox.Show("站点" + stationID + "当前不在线！");
-                }
-            }
-            else
-            {
-                MessageBox.Show("站点" + stationID + "当前不在线！");
-            }
-            return query;
-        }
+        
         /// <summary>
         /// GPRS 发送设置命令
         /// </summary>
@@ -1159,6 +1151,7 @@ namespace Hydrology.DataMgr
             }
             return query;
         }
+        
 
         #endregion
 
@@ -2259,12 +2252,114 @@ namespace Hydrology.DataMgr
             }
             return flag;
         }
+        /// <summary>
+        /// 发送TCP读取命令
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <param name="stationID"></param>
+        /// <param name="cmds"></param>
+        /// <returns></returns>
+        public String SendTcpRead(string userid, string stationID, IList<EDownParamGY> cmds)
+        {
+            string query = string.Empty;
+            var tcp = FindTcpByUserid(stationID);
+            if (tcp != null)
+            {
+                //uint dtuID = 0;
+                if (tcp.getSessionIdbyStationid(stationID) != "0")
+                {
+                    //TODO
+                    query = tcp.Down.BuildQuery(stationID, cmds, EChannelType.TCP);
+                    tcp.SendData(stationID, query);
+
+
+                }
+                //1109
+                else
+                {
+                    MessageBox.Show("站点" + stationID + "当前不在线！");
+                }
+            }
+            else
+            {
+                MessageBox.Show("站点" + stationID + "当前不在线！");
+            }
+            return query;
+        }
+
+        /// <summary>
+        /// TCP发送flash批量传输
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <param name="stationID"></param>
+        /// <param name="stype"></param>
+        /// <param name="trans"></param>
+        /// <param name="beginTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        public String SendTcpFlash(string userid, string stationID, EStationType stype, ETrans trans, DateTime beginTime, DateTime endTime)
+        {
+            string query = string.Empty;
+            var tcp = FindTcpByUserid(stationID);
+            if (tcp != null)
+            {
+                //uint dtuID = 0;
+                if (tcp.getSessionIdbyStationid(stationID) != "0")
+                {
+                    //TODO
+                    query = tcp.Down.BuildQuery_Flash(stationID, stype, trans, beginTime, endTime, EChannelType.TCP);
+                    query = "\u0001001122334400123438802A\u000200001904241608081904231519042415 DRN05 DRP\u0005A9B1";
+                    tcp.SendData(stationID, query);
+                }
+                //1109
+                else
+                {
+                    MessageBox.Show("站点" + stationID + "当前不在线！");
+                }
+            }
+            else
+            {
+                MessageBox.Show("站点" + stationID + "当前不在线！");
+            }
+            return query;
+        }
+        /// <summary>
+        /// 根据stationid获取TCP session
+        /// </summary>
+        /// <param name="stationId"></param>
+        /// <returns></returns>
+        public ITransparen FindTcpByUserid(string stationId)
+        {
+            ITransparen tcp = null;
+            foreach (var item in this.m_TransparenLists)
+            {
+
+                if (item.getSessionIdbyStationid(stationId) != "0")
+                {
+                    tcp = item;
+                    break;
+                }
+            }
+            return tcp;
+        }
         private ITransparen FindTransparenByUserid(uint uid)
         {
             ITransparen transparen = null;
             //TODO
             return transparen;
         }
+
+        /// <summary>
+        /// TCP发送批量传输
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <param name="stationID"></param>
+        /// <param name="stype"></param>
+        /// <param name="trans"></param>
+        /// <param name="beginTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        
         #endregion
 
         /// <summary>

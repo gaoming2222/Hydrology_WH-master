@@ -107,6 +107,8 @@ namespace Hydrology.DBManager.DB.SQLServer
         }
 
         public System.Timers.Timer m_addTimer_1;
+        public System.Timers.Timer m_addTimer_2;
+        List<CEntityRain> batchInsertRainList = new List<CEntityRain>();
 
         #endregion
 
@@ -143,6 +145,14 @@ namespace Hydrology.DBManager.DB.SQLServer
             m_addTimer_1.Elapsed += new System.Timers.ElapsedEventHandler(EHTimer_1);
             m_addTimer_1.Enabled = false;
             m_addTimer_1.Interval = CDBParams.GetInstance().AddToDbDelay;
+
+
+            m_addTimer_2 = new System.Timers.Timer();
+            m_addTimer_2.Elapsed += new System.Timers.ElapsedEventHandler(EHTimer_2);
+            m_addTimer_2.Enabled = false;
+            m_addTimer_2.Interval = CDBParams.GetInstance().AddToDbDelay;
+            //m_addTimer_2.Interval = 15 * 1000 * 60;
+            m_addTimer_2.Start();
             if (XmlHelper.urlDic == null || XmlHelper.urlDic.Count == 0)
             {
                 XmlHelper.getXMLInfo();
@@ -162,6 +172,16 @@ namespace Hydrology.DBManager.DB.SQLServer
             m_dateTimePreAddTime = DateTime.Now;
             //将数据写入数据库
             NewTask(() => { InsertSqlBulk(m_tableDataAdded); });
+        }
+
+        protected virtual void EHTimer_2(object source, System.Timers.ElapsedEventArgs e)
+        {
+            //定时器事件，将所有的记录都写入数据库
+            m_addTimer_2.Stop();  //停止定时器
+            m_dateTimePreAddTime = DateTime.Now;
+            //将数据写入数据库
+            NewTask(() => { BatchInsert(); });
+            m_addTimer_2.Start();
         }
 
         public void AddNewRow(CEntityRain rain)
@@ -1027,6 +1047,122 @@ namespace Hydrology.DBManager.DB.SQLServer
             return;
         }
 
+
+        protected void BatchInsert()
+        {
+            if (batchInsertRainList == null || batchInsertRainList.Count == 0)
+            {
+                return;
+            }
+            List<CEntityRain> rainList = new List<CEntityRain>();
+            lock (batchInsertRainList)
+            {
+                rainList.AddRange(batchInsertRainList);
+                batchInsertRainList.Clear();
+            }
+
+            if (rainList.Count <= 500)
+            {
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                string suffix = "/rain/insertRain";
+                string url = "http://" + urlPrefix + suffix;
+                //string url = "http://127.0.0.1:8088/rain/insertRain";
+                Newtonsoft.Json.Converters.IsoDateTimeConverter timeConverter = new Newtonsoft.Json.Converters.IsoDateTimeConverter();
+                //这里使用自定义日期格式，如果不使用的话，默认是ISO8601格式
+                timeConverter.DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+                string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(rainList, Newtonsoft.Json.Formatting.None, timeConverter);
+                param["rain"] = jsonStr;
+                //string jsonStr = HttpHelper.ObjectToJson(rains);
+                //param["rain"] = "[{\"BState\":1,\"ChannelType\":6,\"DayRain\":null,\"DifferneceRain\":null,\"MessageType\":2,\"PeriodRain\":null,\"RainID\":0,\"StationID\":\"3004\",\"TimeCollect\":\"2019-3-13 11:00:00\",\"TimeRecieved\":\"2019-3-13 11:15:00\",\"TotalRain\":4}]";
+                try
+                {
+                    string resultJson = HttpHelper.Post(url, param);
+                    CDBLog.Instance.AddInfo(string.Format("添加{0}行到雨量表", rainList.Count));
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine("添加雨量信息失败");
+                    CDBLog.Instance.AddInfo(string.Format("添加数据到水位表失败", rainList.Count));
+                    return;
+                }
+                finally
+                {
+                    rainList.Clear();
+                }
+            }
+            else
+            {
+                CDBLog.Instance.AddInfo(string.Format("数据量大于500条，则分批插入", rainList.Count));
+                List<CEntityRain> rains = new List<CEntityRain>();
+
+                for (int i = 0; i < rainList.Count; i++)
+                {
+                    rains.Add(rainList[i]);
+                    if ((i+1) % 500 == 0)
+                    {
+                        Dictionary<string, object> param = new Dictionary<string, object>();
+                        string suffix = "/rain/insertRain";
+                        string url = "http://" + urlPrefix + suffix;
+                        //string url = "http://127.0.0.1:8088/rain/insertRain";
+                        Newtonsoft.Json.Converters.IsoDateTimeConverter timeConverter = new Newtonsoft.Json.Converters.IsoDateTimeConverter();
+                        //这里使用自定义日期格式，如果不使用的话，默认是ISO8601格式
+                        timeConverter.DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+                        string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(rains, Newtonsoft.Json.Formatting.None, timeConverter);
+                        param["rain"] = jsonStr;
+                        //string jsonStr = HttpHelper.ObjectToJson(rains);
+                        //param["rain"] = "[{\"BState\":1,\"ChannelType\":6,\"DayRain\":null,\"DifferneceRain\":null,\"MessageType\":2,\"PeriodRain\":null,\"RainID\":0,\"StationID\":\"3004\",\"TimeCollect\":\"2019-3-13 11:00:00\",\"TimeRecieved\":\"2019-3-13 11:15:00\",\"TotalRain\":4}]";
+                        try
+                        {
+                            string resultJson = HttpHelper.Post(url, param);
+                            CDBLog.Instance.AddInfo(string.Format("添加{0}行到雨量表", rains.Count));
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.WriteLine("添加雨量信息失败");
+                            CDBLog.Instance.AddInfo(string.Format("添加雨量信息失败", rains.Count));
+                            return;
+                        }
+                        finally
+                        {
+                            rains.Clear();
+                        }
+                    }
+                    if (i == rainList.Count - 1)
+                    {
+                        Dictionary<string, object> param = new Dictionary<string, object>();
+                        string suffix = "/rain/insertRain";
+                        string url = "http://" + urlPrefix + suffix;
+                        //string url = "http://127.0.0.1:8088/rain/insertRain";
+                        Newtonsoft.Json.Converters.IsoDateTimeConverter timeConverter = new Newtonsoft.Json.Converters.IsoDateTimeConverter();
+                        //这里使用自定义日期格式，如果不使用的话，默认是ISO8601格式
+                        timeConverter.DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+                        string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(rains, Newtonsoft.Json.Formatting.None, timeConverter);
+                        param["rain"] = jsonStr;
+                        //string jsonStr = HttpHelper.ObjectToJson(rains);
+                        //param["rain"] = "[{\"BState\":1,\"ChannelType\":6,\"DayRain\":null,\"DifferneceRain\":null,\"MessageType\":2,\"PeriodRain\":null,\"RainID\":0,\"StationID\":\"3004\",\"TimeCollect\":\"2019-3-13 11:00:00\",\"TimeRecieved\":\"2019-3-13 11:15:00\",\"TotalRain\":4}]";
+                        try
+                        {
+                            string resultJson = HttpHelper.Post(url, param);
+                            CDBLog.Instance.AddInfo(string.Format("添加{0}行到雨量表", rains.Count));
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.WriteLine("添加雨量信息失败");
+                            CDBLog.Instance.AddInfo(string.Format("添加雨量信息失败", rains.Count));
+                            return;
+                        }
+                        finally
+                        {
+                            rains.Clear();
+                            rainList.Clear();
+                        }
+                    }
+                }
+                return;
+            }
+        }
+
+
         protected void BulkTableCopy(string tname, DataTable dt)
         {
             try
@@ -1602,27 +1738,30 @@ namespace Hydrology.DBManager.DB.SQLServer
         {
             if (rains.Count <= 0)
             {
+                return;
             }
-            Dictionary<string, object> param = new Dictionary<string, object>();
-            string suffix = "/rain/insertRain";
-            string url = "http://" + urlPrefix + suffix;
-            //string url = "http://127.0.0.1:8088/rain/insertRain";
-            Newtonsoft.Json.Converters.IsoDateTimeConverter timeConverter = new Newtonsoft.Json.Converters.IsoDateTimeConverter();
-            //这里使用自定义日期格式，如果不使用的话，默认是ISO8601格式
-            timeConverter.DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
-            string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(rains, Newtonsoft.Json.Formatting.None, timeConverter);
-            param["rain"] = jsonStr;
-            //string jsonStr = HttpHelper.ObjectToJson(rains);
-            //param["rain"] = "[{\"BState\":1,\"ChannelType\":6,\"DayRain\":null,\"DifferneceRain\":null,\"MessageType\":2,\"PeriodRain\":null,\"RainID\":0,\"StationID\":\"3004\",\"TimeCollect\":\"2019-3-13 11:00:00\",\"TimeRecieved\":\"2019-3-13 11:15:00\",\"TotalRain\":4}]";
-            try
-            {
-                string resultJson = HttpHelper.Post(url, param);
-                CDBLog.Instance.AddInfo(string.Format("添加{0}行到雨量表", rains.Count));
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("添加雨量信息失败");
-            }
+            batchInsertRainList.AddRange(rains);
+
+            //Dictionary<string, object> param = new Dictionary<string, object>();
+            //string suffix = "/rain/insertRain";
+            //string url = "http://" + urlPrefix + suffix;
+            ////string url = "http://127.0.0.1:8088/rain/insertRain";
+            //Newtonsoft.Json.Converters.IsoDateTimeConverter timeConverter = new Newtonsoft.Json.Converters.IsoDateTimeConverter();
+            ////这里使用自定义日期格式，如果不使用的话，默认是ISO8601格式
+            //timeConverter.DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+            //string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(rains, Newtonsoft.Json.Formatting.None, timeConverter);
+            //param["rain"] = jsonStr;
+            ////string jsonStr = HttpHelper.ObjectToJson(rains);
+            ////param["rain"] = "[{\"BState\":1,\"ChannelType\":6,\"DayRain\":null,\"DifferneceRain\":null,\"MessageType\":2,\"PeriodRain\":null,\"RainID\":0,\"StationID\":\"3004\",\"TimeCollect\":\"2019-3-13 11:00:00\",\"TimeRecieved\":\"2019-3-13 11:15:00\",\"TotalRain\":4}]";
+            //try
+            //{
+            //    string resultJson = HttpHelper.Post(url, param);
+            //    CDBLog.Instance.AddInfo(string.Format("添加{0}行到雨量表", rains.Count));
+            //}
+            //catch (Exception e)
+            //{
+            //    Debug.WriteLine("添加雨量信息失败");
+            //}
             //// 记录超过1000条，或者时间超过1分钟，就将当前的数据写入数据库
             //m_mutexDataTable.WaitOne(); //等待互斥量
             //foreach (CEntityRain rain in rains)

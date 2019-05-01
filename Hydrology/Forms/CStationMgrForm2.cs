@@ -70,19 +70,19 @@ namespace Hydrology.Forms
                 }
                 cmb_SubCenter.SelectedIndex = 0;
                 // 初始化站点类型
-                cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.ERainFall));
-                cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.ERiverWater));
                 cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.EHydrology));
                 cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.EH));
-                // 初始化雨量精度
+                cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.RE));
+                cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.RP));
+                cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.GT));
+                cmb_StationType.SelectedIndex = 0;
 
+                // 初始化雨量精度
                 cmb_RainAccuracy.Items.Add("0.1");
                 cmb_RainAccuracy.Items.Add("0.2");
                 cmb_RainAccuracy.Items.Add("0.5");
                 cmb_RainAccuracy.Items.Add("1.0");
-                // cmb_RainAccuracy.Items.Add("无");
                 cmb_RainAccuracy.SelectedIndex = 0;
-                cmb_RainAccuracy.Enabled = false;
 
                 //浮子水位、气泡水位、压阻水位、雷达水位
 
@@ -92,14 +92,13 @@ namespace Hydrology.Forms
                 comb_WaterSensor.Items.Add("雷达水位");
                 //  comb_WaterSensor.Items.Add("无");
                 comb_WaterSensor.SelectedIndex = 0;
-                comb_WaterSensor.Enabled = false;
 
                 //翻斗雨量、雨雪量计
                 comb_RainSensor.Items.Add("翻斗雨量");
                 comb_RainSensor.Items.Add("雨雪量计");
                 //  comb_RainSensor.Items.Add("无");
                 comb_RainSensor.SelectedIndex = 0;
-                comb_RainSensor.Enabled = false;
+                //comb_RainSensor.Enabled = false;
 
                 //自报段次
                 comb_Paragraph.Items.Add("1");
@@ -111,16 +110,10 @@ namespace Hydrology.Forms
                 comb_Paragraph.SelectedIndex = 4;
 
                 //报警信息初始化
-                //cmb_RainAccuracy.Enabled = false;
-                //comb_WaterSensor.Enabled = false;
-                //comb_RainSensor.Enabled = false;
-                textBox_WaterMin.Enabled = false;
-                textBox_WaterMax.Enabled = false;
-                textBox_RainChange.Enabled = false;
                 textBox_Voltage.Text = "11";
-                textBox_WaterChange.Enabled = false;
+                
                 //数值参数初始化
-                textBox_WaterBase.Enabled = false;
+                
 
                 if (cmb_StationType.Text == "雨量站")
                 {
@@ -181,7 +174,7 @@ namespace Hydrology.Forms
                     textBox_WaterBase.Enabled = true;
                     textBox_WaterBase.Text = "0.0";
                 }
-                if (cmb_StationType.Text == "水文站" || cmb_StationType.Text == "河道站")
+                if (cmb_StationType.Text == "水文站")
                 {
                     cmb_RainAccuracy.Enabled = true;
                     cmb_RainAccuracy.Items.Remove("无");
@@ -248,10 +241,10 @@ namespace Hydrology.Forms
 
                 //通讯参数初始化
                 textBox_GSM.Text = "";
-                textBox_GSM.Enabled = false;
+                //textBox_GSM.Enabled = false;
 
                 textBox_GPRS.Text = "";
-                textBox_GPRS.Enabled = false;
+                //textBox_GPRS.Enabled = false;
 
                 textBox_Beidou.Text = "";
                 textBox_Beidou.Enabled = false;
@@ -735,10 +728,8 @@ namespace Hydrology.Forms
         {
             try
             {
-                textBox_GPRS.Enabled = false;
                 textBox_GPRS.Text = "";
                 textBox_GSM.Text = "";
-                textBox_GSM.Enabled = false;
                 textBox_Beidou.Text = "";
                 textBox_Beidou.Enabled = false;
                 textBox_BeidouMember.Text = "";
@@ -802,10 +793,10 @@ namespace Hydrology.Forms
         {
             try
             {
-                textBox_GPRS.Enabled = false;
+                //textBox_GPRS.Enabled = false;
                 textBox_GPRS.Text = "";
                 textBox_GSM.Text = "";
-                textBox_GSM.Enabled = false;
+                //textBox_GSM.Enabled = false;
                 textBox_Beidou.Text = "";
                 textBox_Beidou.Enabled = false;
                 textBox_BeidouMember.Text = "";
@@ -873,16 +864,16 @@ namespace Hydrology.Forms
             try
             {
                 //报警信息初始化
-                cmb_RainAccuracy.Enabled = false;
-                comb_WaterSensor.Enabled = false;
-                comb_RainSensor.Enabled = false;
-                textBox_WaterMin.Enabled = false;
-                textBox_WaterMax.Enabled = false;
-                textBox_RainChange.Enabled = false;
+                //cmb_RainAccuracy.Enabled = false;
+                //comb_WaterSensor.Enabled = false;
+                //comb_RainSensor.Enabled = false;
+                //textBox_WaterMin.Enabled = false;
+                //textBox_WaterMax.Enabled = false;
+                //textBox_RainChange.Enabled = false;
                 textBox_Voltage.Text = "11";
-                textBox_WaterChange.Enabled = false;
-                //数值参数初始化
-                textBox_WaterBase.Enabled = false;
+                //textBox_WaterChange.Enabled = false;
+                ////数值参数初始化
+                //textBox_WaterBase.Enabled = false;
 
                 if (cmb_StationType.Text == "雨量站")
                 {

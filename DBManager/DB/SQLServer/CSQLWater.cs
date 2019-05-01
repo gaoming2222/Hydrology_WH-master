@@ -98,6 +98,8 @@ namespace Hydrology.DBManager.DB.SQLServer
         }
 
         public System.Timers.Timer m_addTimer_1;
+        public System.Timers.Timer m_addTimer_2;
+        List<CEntityWater> batchInsertWaterList = new List<CEntityWater>();
         #endregion ///<PRIVATE_DATAMEMBER
 
         #region 公共方法
@@ -125,6 +127,15 @@ namespace Hydrology.DBManager.DB.SQLServer
             m_addTimer_1.Elapsed += new System.Timers.ElapsedEventHandler(EHTimer_1);
             m_addTimer_1.Enabled = false;
             m_addTimer_1.Interval = CDBParams.GetInstance().AddToDbDelay;
+
+
+            m_addTimer_2 = new System.Timers.Timer();
+            m_addTimer_2.Elapsed += new System.Timers.ElapsedEventHandler(EHTimer_2);
+            m_addTimer_2.Enabled = false;
+            m_addTimer_2.Interval = CDBParams.GetInstance().AddToDbDelay;
+            m_addTimer_2.Start();
+
+            //每隔一分钟做一次写库操作
             if (XmlHelper.urlDic == null || XmlHelper.urlDic.Count == 0)
             {
                 XmlHelper.getXMLInfo();
@@ -145,6 +156,16 @@ namespace Hydrology.DBManager.DB.SQLServer
             m_dateTimePreAddTime = DateTime.Now;
             //将数据写入数据库
             NewTask(() => { InsertSqlBulk(m_tableDataAdded); });
+        }
+
+        protected virtual void EHTimer_2(object source, System.Timers.ElapsedEventArgs e)
+        {
+            //定时器事件，将所有的记录都写入数据库
+            m_addTimer_2.Stop();  //停止定时器
+            m_dateTimePreAddTime = DateTime.Now;
+            //将数据写入数据库
+            NewTask(() => { BatchInsert(); });
+            m_addTimer_2.Start();
         }
 
         // 添加新列
@@ -219,27 +240,10 @@ namespace Hydrology.DBManager.DB.SQLServer
         {
             if (waters.Count <= 0)
             {
+                return;
             }
-            Dictionary<string, object> param = new Dictionary<string, object>();
-            string suffix = "/water/insertWater";
-            string url = "http://" + urlPrefix + suffix;
-            //string url = "http://127.0.0.1:8088/water/insertWater";
-            Newtonsoft.Json.Converters.IsoDateTimeConverter timeConverter = new Newtonsoft.Json.Converters.IsoDateTimeConverter();
-            //这里使用自定义日期格式，如果不使用的话，默认是ISO8601格式
-            timeConverter.DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
-            string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(waters, Newtonsoft.Json.Formatting.None, timeConverter);
-            //string jsonStr = HttpHelper.ObjectToJson(waters);
-            //param["water"] = "[{\"ChannelType\":6,\"MessageType\":1,\"StationID\":\"3004\",\"TimeCollect\":\"2019-3-13 14:00:00\",\"TimeRecieved\":\"2019-3-13 14:45:00\",\"WaterFlow\":14,\"WaterID\":0,\"WaterStage\":14,\"state\":1}]";
-            param["water"] = jsonStr;
-            try
-            {
-                string resultJson = HttpHelper.Post(url, param);
-                CDBLog.Instance.AddInfo(string.Format("添加{0}行到水位表", waters.Count));
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("添加水位信息失败");
-            }
+            batchInsertWaterList.AddRange(waters);
+            
             //// 记录超过写入上线条，或者时间超过1分钟，就将当前的数据写入数据库
             //m_mutexDataTable.WaitOne(); //等待互斥量
             //foreach (CEntityWater water in waters)
@@ -692,6 +696,124 @@ namespace Hydrology.DBManager.DB.SQLServer
             return;
         }
 
+        protected void BatchInsert()
+        {
+            if (batchInsertWaterList == null || batchInsertWaterList.Count == 0)
+            {
+                return;
+            }
+            List<CEntityWater> waterList = new List<CEntityWater>();
+            lock (batchInsertWaterList)
+            {
+                waterList.AddRange(batchInsertWaterList);
+                batchInsertWaterList.Clear();
+            }
+            
+            if (waterList.Count <= 500)
+            {
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                string suffix = "/water/insertWater";
+                string url = "http://" + urlPrefix + suffix;
+                //string url = "http://127.0.0.1:8088/water/insertWater";
+                Newtonsoft.Json.Converters.IsoDateTimeConverter timeConverter = new Newtonsoft.Json.Converters.IsoDateTimeConverter();
+                //这里使用自定义日期格式，如果不使用的话，默认是ISO8601格式
+                timeConverter.DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+                string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(waterList, Newtonsoft.Json.Formatting.None, timeConverter);
+                //string jsonStr = HttpHelper.ObjectToJson(waters);
+                //param["water"] = "[{\"ChannelType\":6,\"MessageType\":1,\"StationID\":\"3004\",\"TimeCollect\":\"2019-3-13 14:00:00\",\"TimeRecieved\":\"2019-3-13 14:45:00\",\"WaterFlow\":14,\"WaterID\":0,\"WaterStage\":14,\"state\":1}]";
+                param["water"] = jsonStr;
+                try
+                {
+                    string resultJson = HttpHelper.Post(url, param);
+                    CDBLog.Instance.AddInfo(string.Format("添加{0}行到水位表", waterList.Count));
+                    return;
+                }
+                catch (Exception e)
+                {
+                    CDBLog.Instance.AddInfo(string.Format("添加数据到水位表失败", waterList.Count));
+                    Debug.WriteLine("添加水位信息失败");
+                    return;
+                }
+                finally
+                {
+                    waterList.Clear();
+                }
+            }
+            else
+            {
+                CDBLog.Instance.AddInfo(string.Format("数据量大于500条，则分批插入", waterList.Count));
+                List<CEntityWater> waters = new List<CEntityWater>();
+                
+                for(int i = 0; i < waterList.Count; i++)
+                {
+                    waters.Add(waterList[i]);
+                    if((i+1)% 500 == 0)
+                    {
+                        Dictionary<string, object> param = new Dictionary<string, object>();
+                        string suffix = "/water/insertWater";
+                        string url = "http://" + urlPrefix + suffix;
+                        //string url = "http://127.0.0.1:8088/water/insertWater";
+                        Newtonsoft.Json.Converters.IsoDateTimeConverter timeConverter = new Newtonsoft.Json.Converters.IsoDateTimeConverter();
+                        //这里使用自定义日期格式，如果不使用的话，默认是ISO8601格式
+                        timeConverter.DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+                        string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(waters, Newtonsoft.Json.Formatting.None, timeConverter);
+                        //string jsonStr = HttpHelper.ObjectToJson(waters);
+                        //param["water"] = "[{\"ChannelType\":6,\"MessageType\":1,\"StationID\":\"3004\",\"TimeCollect\":\"2019-3-13 14:00:00\",\"TimeRecieved\":\"2019-3-13 14:45:00\",\"WaterFlow\":14,\"WaterID\":0,\"WaterStage\":14,\"state\":1}]";
+                        param["water"] = jsonStr;
+                        try
+                        {
+                            string resultJson = HttpHelper.Post(url, param);
+                            CDBLog.Instance.AddInfo(string.Format("添加{0}行到水位表", waters.Count));
+                        }
+                        catch (Exception e)
+                        {
+                            CDBLog.Instance.AddInfo(string.Format("添加数据到水位表失败", waters.Count));
+                            Debug.WriteLine("添加水位信息失败");
+                            return;
+                        }
+                        finally
+                        {
+                            waters.Clear();
+                        }
+                    }
+                    if(i == waterList.Count - 1)
+                    {
+                        Dictionary<string, object> param = new Dictionary<string, object>();
+                        string suffix = "/water/insertWater";
+                        string url = "http://" + urlPrefix + suffix;
+                        //string url = "http://127.0.0.1:8088/water/insertWater";
+                        Newtonsoft.Json.Converters.IsoDateTimeConverter timeConverter = new Newtonsoft.Json.Converters.IsoDateTimeConverter();
+                        //这里使用自定义日期格式，如果不使用的话，默认是ISO8601格式
+                        timeConverter.DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+                        string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(waters, Newtonsoft.Json.Formatting.None, timeConverter);
+                        //string jsonStr = HttpHelper.ObjectToJson(waters);
+                        //param["water"] = "[{\"ChannelType\":6,\"MessageType\":1,\"StationID\":\"3004\",\"TimeCollect\":\"2019-3-13 14:00:00\",\"TimeRecieved\":\"2019-3-13 14:45:00\",\"WaterFlow\":14,\"WaterID\":0,\"WaterStage\":14,\"state\":1}]";
+                        param["water"] = jsonStr;
+                        try
+                        {
+                            string resultJson = HttpHelper.Post(url, param);
+                            CDBLog.Instance.AddInfo(string.Format("添加{0}行到水位表", waters.Count));
+                            
+                        }
+                        catch (Exception e)
+                        {
+                            CDBLog.Instance.AddInfo(string.Format("添加数据到水位表失败", waters.Count));
+                            Debug.WriteLine("添加水位信息失败");
+                            return;
+                        }
+                        finally
+                        {
+                            waters.Clear();
+                            waterList.Clear();
+                            
+                        }
+                    }
+                }
+                return;
+            }
+            
+            
+        }
         protected void BulkTableCopy(string tname, DataTable dt)
         {
             try

@@ -236,8 +236,8 @@ namespace Hydrology.CControls
         private void EHTimer(object sender, System.Timers.ElapsedEventArgs e)
         {
             // 每十分钟刷新界面
-            RefreshStationState();
-            CSystemInfoMgr.Instance.AddInfo("刷新站点状态");
+            //RefreshStationState();
+            //CSystemInfoMgr.Instance.AddInfo("刷新站点状态");
         }
 
         private void CStationStateForm_FormClosing(object sender, FormClosingEventArgs e)
