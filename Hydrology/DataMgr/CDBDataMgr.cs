@@ -2415,7 +2415,8 @@ namespace Hydrology.DataMgr
                     return;
                 }
                 // 更新水量表，雨量表以及电压表
-                //#region 雨量表
+                //TODO 新站点中不包括雨量站，暂时不增加处理雨量数据
+                #region 雨量表
                 //if (args.EStationType == EStationType.EH || args.EStationType == EStationType.RE || args.EStationType == EStationType.GT
                 //    || args.EStationType == EStationType.RP || args.EStationType == EStationType.ERainFall || args.EStationType == EStationType.EHydrology)
                 //    {
@@ -2497,7 +2498,7 @@ namespace Hydrology.DataMgr
                 //        m_proxyRain.AddNewRows_DataModify(rains);
                 //    }
                 //}
-                //#endregion 雨量表
+                #endregion 雨量表
 
                 #region 水位表
                 if (args.EStationType == EStationType.EH || args.EStationType == EStationType.RE || args.EStationType == EStationType.GT
@@ -2523,6 +2524,8 @@ namespace Hydrology.DataMgr
                         //water.TimeCollect = data.DataTime;
                         water.TimeCollect = new DateTime(data.DataTime.Year, data.DataTime.Month, data.DataTime.Day
                             , data.DataTime.Hour, data.DataTime.Minute, 0);
+                        //water.TimeCollect = new DateTime(data.DataTime.Year, data.DataTime.Month, data.DataTime.Day
+                        //    , 18, 0, 0);
                         water.TimeRecieved = args.RecvDataTime;
                         if (station.DWaterBase.HasValue)
                         {
@@ -2552,44 +2555,44 @@ namespace Hydrology.DataMgr
                 }
                 #endregion 水量表
 
-                //#region 电压表
-                //List<CEntityVoltage> listVoltages = new List<CEntityVoltage>();
-                //foreach (CSingleStationData data in args.Datas)
-                //{
-                //    // 是否和上一条时间一致, 就丢失当条数据
-                //    if (m_mapStationRTD[station.StationID].TimeDeviceGained == data.DataTime)
-                //    {
-                //        Debug.WriteLine("drop");
-                //        continue;
-                //    }
+                #region 电压表
+                List<CEntityVoltage> listVoltages = new List<CEntityVoltage>();
+                foreach (CSingleStationData data in args.Datas)
+                {
+                    // 是否和上一条时间一致, 就丢失当条数据
+                    if (m_mapStationRTD[station.StationID].TimeDeviceGained == data.DataTime)
+                    {
+                        Debug.WriteLine("drop");
+                        continue;
+                    }
 
-                //    if (data.Voltage < 0)
-                //    {
-                //        continue;
-                //    }
+                    if (data.Voltage < 0)
+                    {
+                        continue;
+                    }
 
-                //    CEntityVoltage voltage = new CEntityVoltage();
-                //    voltage.StationID = station.StationID;
-                //    voltage.TimeCollect = data.DataTime;
-                //    voltage.TimeRecieved = args.RecvDataTime;
-                   
-                //    voltage.Voltage = data.Voltage;
-                //    voltage.ChannelType = args.EChannelType;
-                //    voltage.MessageType = args.EMessageType;
-                //    int status = 1;
-                //    AssertVoltageData(voltage, ref tmpRTDVoltageDataState, ref status);
-                //    voltage.state = status;
-                //    if(voltage.Voltage != null &&  voltage.Voltage > 0)
-                //    {
-                //        listVoltages.Add(voltage);
-                //    }
-                //}
-                ////m_proxyVoltage.AddNewRows(listVoltages);
-                //if(listVoltages != null && listVoltages.Count > 0)
-                //{
-                //    m_proxyVoltage.AddNewRows_1(listVoltages);
-                //}
-                //#endregion 电压表
+                    CEntityVoltage voltage = new CEntityVoltage();
+                    voltage.StationID = station.StationID;
+                    voltage.TimeCollect = data.DataTime;
+                    voltage.TimeRecieved = args.RecvDataTime;
+
+                    voltage.Voltage = data.Voltage;
+                    voltage.ChannelType = args.EChannelType;
+                    voltage.MessageType = args.EMessageType;
+                    int status = 1;
+                    AssertVoltageData(voltage, ref tmpRTDVoltageDataState, ref status);
+                    voltage.state = status;
+                    if (voltage.Voltage != null && voltage.Voltage > 0)
+                    {
+                        listVoltages.Add(voltage);
+                    }
+                }
+                //m_proxyVoltage.AddNewRows(listVoltages);
+                if (listVoltages != null && listVoltages.Count > 0)
+                {
+                    m_proxyVoltage.AddNewRows_1(listVoltages);
+                }
+                #endregion 电压表
 
                 #region 实时数据表
                 CEntityRealTime realtime = new CEntityRealTime();
@@ -2657,8 +2660,9 @@ namespace Hydrology.DataMgr
                 m_mapStationRTD[args.StrStationID] = realtime;
 
                 // 写入实时信息表
-                //m_proxyRealtime.AddNewRow(realtime);
-                m_proxyRealtime.UpdateRow(realtime);
+                m_proxyRealtime.AddNewRow(realtime);
+                m_proxyRealtime.AddNewRow_1(realtime);
+                //m_proxyRealtime.UpdateRow(realtime);
             }
             catch (Exception)
             {

@@ -44,6 +44,8 @@ namespace Hydrology.DBManager.DB.SQLServer
         private DateTime m_endTime;    //查询结束时间
 
         public System.Timers.Timer m_addTimer_1;
+        public System.Timers.Timer m_addTimer_2;
+        List<CEntityRealTime> batchInsertRealtimeList = new List<CEntityRealTime>();
 
         #endregion
 
@@ -74,6 +76,13 @@ namespace Hydrology.DBManager.DB.SQLServer
             m_addTimer_1.Enabled = false;
             m_addTimer_1.Interval = CDBParams.GetInstance().AddToDbDelay;
 
+            m_addTimer_2 = new System.Timers.Timer();
+            m_addTimer_2.Elapsed += new System.Timers.ElapsedEventHandler(EHTimer_2);
+            m_addTimer_2.Enabled = false;
+            //m_addTimer_2.Interval = CDBParams.GetInstance().AddToDbDelay;
+            m_addTimer_2.Interval = 35 * 1000;
+            m_addTimer_2.Start();
+
 
             if (XmlHelper.urlDic == null || XmlHelper.urlDic.Count == 0)
             {
@@ -94,6 +103,16 @@ namespace Hydrology.DBManager.DB.SQLServer
             m_dateTimePreAddTime = DateTime.Now;
             //将数据写入数据库
             NewTask(() => { InsertSqlBulk(m_tableDataAdded); });
+        }
+
+        protected virtual void EHTimer_2(object source, System.Timers.ElapsedEventArgs e)
+        {
+            //定时器事件，将所有的记录都写入数据库
+            m_addTimer_2.Stop();  //停止定时器
+            m_dateTimePreAddTime = DateTime.Now;
+            //将数据写入数据库
+            NewTask(() => { BatchInsert(); });
+            m_addTimer_2.Start();
         }
 
         // 添加新列
@@ -154,6 +173,16 @@ namespace Hydrology.DBManager.DB.SQLServer
             //    // 没有超过缓存最大值，开启定时器进行检测,多次调用Start()会导致重新计数
             //    m_addTimer.Start();
             //}
+        }
+
+        public void AddNewRow_1(CEntityRealTime realtime)
+        {
+            if (realtime == null)
+            {
+                return;
+            }
+            batchInsertRealtimeList.Add(realtime);
+            batchInsertRealtimeList.Add(realtime);
         }
 
         public bool UpdateRow(CEntityRealTime realtime)
@@ -245,7 +274,7 @@ namespace Hydrology.DBManager.DB.SQLServer
             UpdateRows(UpdateList);
         }
 
-        public void AddNewRow_1(CEntityRealTime realtime)
+        public void AddNewRow_2(CEntityRealTime realtime)
         {
             if (IsInDB(realtime))
             {
@@ -660,6 +689,37 @@ namespace Hydrology.DBManager.DB.SQLServer
             return;
         }
 
+
+        protected void BatchInsert()
+        {
+            if (batchInsertRealtimeList == null || batchInsertRealtimeList.Count == 0)
+            {
+                return;
+            }
+            List<CEntityRealTime> realtimeList = new List<CEntityRealTime>();
+            lock (batchInsertRealtimeList)
+            {
+                realtimeList.AddRange(batchInsertRealtimeList);
+                batchInsertRealtimeList.Clear();
+            }
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            string suffix = "/currentdata/insertCurrentdataCS";
+            string url = "http://" + urlPrefix + suffix;
+            Newtonsoft.Json.Converters.IsoDateTimeConverter timeConverter = new Newtonsoft.Json.Converters.IsoDateTimeConverter();
+            //这里使用自定义日期格式，如果不使用的话，默认是ISO8601格式
+            timeConverter.DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+            string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(realtimeList, Newtonsoft.Json.Formatting.None, timeConverter);
+            param["currentdata"] = jsonStr;
+            try
+            {
+                string resultJson = HttpHelper.Post(url, param);
+                CDBLog.Instance.AddInfo(string.Format("添加{0}行到实时数据表", realtimeList.Count));
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("添加雨量信息失败");
+            }
+        }
         // 恢复初始状态
         private void ResetAll()
         {

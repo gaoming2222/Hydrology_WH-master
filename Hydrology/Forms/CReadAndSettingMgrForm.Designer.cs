@@ -31,20 +31,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CReadAndSettingMgrForm));
             this.vRingsNum = new System.Windows.Forms.NumericUpDown();
             this.vClockTime = new System.Windows.Forms.TextBox();
-            this.vTimeChoice = new System.Windows.Forms.ComboBox();
             this.vDestPhoneNum = new System.Windows.Forms.TextBox();
             this.chkVersionNum = new System.Windows.Forms.CheckBox();
-            this.vViceChannel = new System.Windows.Forms.ComboBox();
-            this.vWorkStatus = new System.Windows.Forms.ComboBox();
-            this.chkWorkStatus = new System.Windows.Forms.CheckBox();
-            this.vMainChannel = new System.Windows.Forms.ComboBox();
-            this.chkTimeChoice = new System.Windows.Forms.CheckBox();
-            this.vTimePeriod = new System.Windows.Forms.ComboBox();
-            this.chkTimePeriod = new System.Windows.Forms.CheckBox();
             this.vVersionNum = new System.Windows.Forms.TextBox();
             this.chkRingsNum = new System.Windows.Forms.CheckBox();
-            this.vVoltage = new System.Windows.Forms.NumericUpDown();
-            this.chkRespBeam = new System.Windows.Forms.CheckBox();
             this.chkTerminalNum = new System.Windows.Forms.CheckBox();
             this.lblGprs = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -63,25 +53,10 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.listView1 = new System.Windows.Forms.ListView();
             this.WorkGroupBox = new System.Windows.Forms.GroupBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.basicconfig = new System.Windows.Forms.TextBox();
-            this.waterYield = new System.Windows.Forms.CheckBox();
             this.label19 = new System.Windows.Forms.Label();
-            this.vStationName = new System.Windows.Forms.TextBox();
-            this.chkStationName = new System.Windows.Forms.CheckBox();
-            this.OperatingParaModify = new System.Windows.Forms.TextBox();
-            this.chkUserName = new System.Windows.Forms.CheckBox();
             this.label16 = new System.Windows.Forms.Label();
-            this.vNormalState = new System.Windows.Forms.ComboBox();
-            this.chkNormalState = new System.Windows.Forms.CheckBox();
-            this.vStationCmdID = new System.Windows.Forms.TextBox();
-            this.chkStationCmdID = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.chkVoltage = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.chkLocalTime = new System.Windows.Forms.CheckBox();
-            this.vClock = new System.Windows.Forms.DateTimePicker();
-            this.chkClock = new System.Windows.Forms.CheckBox();
             this.cmbMsgType = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label11 = new System.Windows.Forms.Label();
@@ -146,18 +121,11 @@
             this.panel8 = new System.Windows.Forms.Panel();
             this.label13 = new System.Windows.Forms.Label();
             this.CommGroupBox = new System.Windows.Forms.GroupBox();
-            this.newPwd = new System.Windows.Forms.TextBox();
-            this.oldPwd = new System.Windows.Forms.TextBox();
             this.memoryReset = new System.Windows.Forms.CheckBox();
-            this.chkViceChannel = new System.Windows.Forms.Label();
-            this.ICset = new System.Windows.Forms.TextBox();
-            this.vTeleNum = new System.Windows.Forms.TextBox();
-            this.chkTeleNum = new System.Windows.Forms.CheckBox();
-            this.chkMainChannel = new System.Windows.Forms.CheckBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.label27 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.vRingsNum)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.vVoltage)).BeginInit();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
             this.WorkGroupBox.SuspendLayout();
@@ -180,7 +148,7 @@
             // 
             // vRingsNum
             // 
-            this.vRingsNum.Location = new System.Drawing.Point(342, 63);
+            this.vRingsNum.Location = new System.Drawing.Point(418, 60);
             this.vRingsNum.Maximum = new decimal(new int[] {
             99,
             0,
@@ -197,23 +165,14 @@
             // 
             // vClockTime
             // 
-            this.vClockTime.Location = new System.Drawing.Point(842, 20);
+            this.vClockTime.Location = new System.Drawing.Point(130, 20);
             this.vClockTime.Name = "vClockTime";
             this.vClockTime.Size = new System.Drawing.Size(96, 21);
             this.vClockTime.TabIndex = 81;
             // 
-            // vTimeChoice
-            // 
-            this.vTimeChoice.FormattingEnabled = true;
-            this.vTimeChoice.Location = new System.Drawing.Point(106, 95);
-            this.vTimeChoice.Name = "vTimeChoice";
-            this.vTimeChoice.Size = new System.Drawing.Size(96, 20);
-            this.vTimeChoice.TabIndex = 75;
-            this.vTimeChoice.SelectedIndexChanged += new System.EventHandler(this.ComboBox_SelectedIndexChanged);
-            // 
             // vDestPhoneNum
             // 
-            this.vDestPhoneNum.Location = new System.Drawing.Point(342, 28);
+            this.vDestPhoneNum.Location = new System.Drawing.Point(679, 15);
             this.vDestPhoneNum.Name = "vDestPhoneNum";
             this.vDestPhoneNum.Size = new System.Drawing.Size(96, 21);
             this.vDestPhoneNum.TabIndex = 80;
@@ -221,7 +180,7 @@
             // chkVersionNum
             // 
             this.chkVersionNum.AutoSize = true;
-            this.chkVersionNum.Location = new System.Drawing.Point(734, 58);
+            this.chkVersionNum.Location = new System.Drawing.Point(18, 65);
             this.chkVersionNum.Name = "chkVersionNum";
             this.chkVersionNum.Size = new System.Drawing.Size(60, 16);
             this.chkVersionNum.TabIndex = 70;
@@ -229,82 +188,9 @@
             this.chkVersionNum.Text = "版本号";
             this.chkVersionNum.UseVisualStyleBackColor = true;
             // 
-            // vViceChannel
-            // 
-            this.vViceChannel.BackColor = System.Drawing.SystemColors.Window;
-            this.vViceChannel.FormattingEnabled = true;
-            this.vViceChannel.Location = new System.Drawing.Point(106, 66);
-            this.vViceChannel.Name = "vViceChannel";
-            this.vViceChannel.Size = new System.Drawing.Size(96, 20);
-            this.vViceChannel.TabIndex = 78;
-            this.vViceChannel.SelectedIndexChanged += new System.EventHandler(this.ComboBox_SelectedIndexChanged);
-            // 
-            // vWorkStatus
-            // 
-            this.vWorkStatus.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.vWorkStatus.FormattingEnabled = true;
-            this.vWorkStatus.Location = new System.Drawing.Point(358, 23);
-            this.vWorkStatus.Name = "vWorkStatus";
-            this.vWorkStatus.Size = new System.Drawing.Size(96, 20);
-            this.vWorkStatus.TabIndex = 69;
-            this.vWorkStatus.SelectedIndexChanged += new System.EventHandler(this.ComboBox_SelectedIndexChanged);
-            // 
-            // chkWorkStatus
-            // 
-            this.chkWorkStatus.AutoSize = true;
-            this.chkWorkStatus.Location = new System.Drawing.Point(280, 58);
-            this.chkWorkStatus.Name = "chkWorkStatus";
-            this.chkWorkStatus.Size = new System.Drawing.Size(84, 16);
-            this.chkWorkStatus.TabIndex = 68;
-            this.chkWorkStatus.Tag = "key";
-            this.chkWorkStatus.Text = "改基本配置";
-            this.chkWorkStatus.UseVisualStyleBackColor = true;
-            // 
-            // vMainChannel
-            // 
-            this.vMainChannel.BackColor = System.Drawing.SystemColors.Window;
-            this.vMainChannel.FormattingEnabled = true;
-            this.vMainChannel.Location = new System.Drawing.Point(105, 38);
-            this.vMainChannel.Name = "vMainChannel";
-            this.vMainChannel.Size = new System.Drawing.Size(96, 20);
-            this.vMainChannel.TabIndex = 76;
-            this.vMainChannel.SelectedIndexChanged += new System.EventHandler(this.ComboBox_SelectedIndexChanged);
-            // 
-            // chkTimeChoice
-            // 
-            this.chkTimeChoice.AutoSize = true;
-            this.chkTimeChoice.Location = new System.Drawing.Point(27, 97);
-            this.chkTimeChoice.Name = "chkTimeChoice";
-            this.chkTimeChoice.Size = new System.Drawing.Size(72, 16);
-            this.chkTimeChoice.TabIndex = 74;
-            this.chkTimeChoice.Tag = "key";
-            this.chkTimeChoice.Text = "人工置数";
-            this.chkTimeChoice.UseVisualStyleBackColor = true;
-            // 
-            // vTimePeriod
-            // 
-            this.vTimePeriod.FormattingEnabled = true;
-            this.vTimePeriod.Location = new System.Drawing.Point(578, 56);
-            this.vTimePeriod.Name = "vTimePeriod";
-            this.vTimePeriod.Size = new System.Drawing.Size(96, 20);
-            this.vTimePeriod.TabIndex = 73;
-            this.vTimePeriod.SelectedIndexChanged += new System.EventHandler(this.ComboBox_SelectedIndexChanged);
-            // 
-            // chkTimePeriod
-            // 
-            this.chkTimePeriod.AutoSize = true;
-            this.chkTimePeriod.Location = new System.Drawing.Point(500, 58);
-            this.chkTimePeriod.Name = "chkTimePeriod";
-            this.chkTimePeriod.Size = new System.Drawing.Size(84, 16);
-            this.chkTimePeriod.TabIndex = 72;
-            this.chkTimePeriod.Tag = "key";
-            this.chkTimePeriod.Text = "读运行参数";
-            this.chkTimePeriod.UseVisualStyleBackColor = true;
-            this.chkTimePeriod.CheckedChanged += new System.EventHandler(this.chkTimePeriod_CheckedChanged);
-            // 
             // vVersionNum
             // 
-            this.vVersionNum.Location = new System.Drawing.Point(812, 53);
+            this.vVersionNum.Location = new System.Drawing.Point(130, 60);
             this.vVersionNum.Name = "vVersionNum";
             this.vVersionNum.Size = new System.Drawing.Size(96, 21);
             this.vVersionNum.TabIndex = 71;
@@ -312,7 +198,7 @@
             // chkRingsNum
             // 
             this.chkRingsNum.AutoSize = true;
-            this.chkRingsNum.Location = new System.Drawing.Point(234, 68);
+            this.chkRingsNum.Location = new System.Drawing.Point(292, 66);
             this.chkRingsNum.Name = "chkRingsNum";
             this.chkRingsNum.Size = new System.Drawing.Size(96, 16);
             this.chkRingsNum.TabIndex = 70;
@@ -320,35 +206,10 @@
             this.chkRingsNum.Text = "恢复出厂设置";
             this.chkRingsNum.UseVisualStyleBackColor = true;
             // 
-            // vVoltage
-            // 
-            this.vVoltage.DecimalPlaces = 2;
-            this.vVoltage.Location = new System.Drawing.Point(578, 23);
-            this.vVoltage.Maximum = new decimal(new int[] {
-            9999,
-            0,
-            0,
-            0});
-            this.vVoltage.Name = "vVoltage";
-            this.vVoltage.ReadOnly = true;
-            this.vVoltage.Size = new System.Drawing.Size(96, 21);
-            this.vVoltage.TabIndex = 67;
-            // 
-            // chkRespBeam
-            // 
-            this.chkRespBeam.AutoSize = true;
-            this.chkRespBeam.Location = new System.Drawing.Point(500, 66);
-            this.chkRespBeam.Name = "chkRespBeam";
-            this.chkRespBeam.Size = new System.Drawing.Size(72, 16);
-            this.chkRespBeam.TabIndex = 68;
-            this.chkRespBeam.Tag = "key";
-            this.chkRespBeam.Text = "设置IC卡";
-            this.chkRespBeam.UseVisualStyleBackColor = true;
-            // 
             // chkTerminalNum
             // 
             this.chkTerminalNum.AutoSize = true;
-            this.chkTerminalNum.Location = new System.Drawing.Point(734, 24);
+            this.chkTerminalNum.Location = new System.Drawing.Point(16, 25);
             this.chkTerminalNum.Name = "chkTerminalNum";
             this.chkTerminalNum.Size = new System.Drawing.Size(108, 16);
             this.chkTerminalNum.TabIndex = 65;
@@ -403,8 +264,6 @@
             // panel3
             // 
             this.panel3.Controls.Add(this.lblWarning);
-            this.panel3.Controls.Add(this.vCustomCmd);
-            this.panel3.Controls.Add(this.btnSend);
             this.panel3.Controls.Add(this.button1);
             this.panel3.Controls.Add(this.chkAll);
             this.panel3.Controls.Add(this.btn_Exit);
@@ -425,14 +284,14 @@
             // 
             // vCustomCmd
             // 
-            this.vCustomCmd.Location = new System.Drawing.Point(63, 13);
+            this.vCustomCmd.Location = new System.Drawing.Point(84, 29);
             this.vCustomCmd.Name = "vCustomCmd";
             this.vCustomCmd.Size = new System.Drawing.Size(272, 21);
             this.vCustomCmd.TabIndex = 91;
             // 
             // btnSend
             // 
-            this.btnSend.Location = new System.Drawing.Point(341, 10);
+            this.btnSend.Location = new System.Drawing.Point(389, 24);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(75, 28);
             this.btnSend.TabIndex = 89;
@@ -453,7 +312,7 @@
             // chkAll
             // 
             this.chkAll.AutoSize = true;
-            this.chkAll.Location = new System.Drawing.Point(3, 15);
+            this.chkAll.Location = new System.Drawing.Point(13, 15);
             this.chkAll.Name = "chkAll";
             this.chkAll.Size = new System.Drawing.Size(48, 16);
             this.chkAll.TabIndex = 86;
@@ -498,7 +357,7 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(3, 582);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(935, 119);
+            this.panel4.Size = new System.Drawing.Size(937, 119);
             this.panel4.TabIndex = 2;
             // 
             // listView1
@@ -508,71 +367,47 @@
             this.listView1.Location = new System.Drawing.Point(0, 0);
             this.listView1.Margin = new System.Windows.Forms.Padding(10);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(935, 119);
+            this.listView1.Size = new System.Drawing.Size(937, 119);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             // 
             // WorkGroupBox
             // 
-            this.WorkGroupBox.Controls.Add(this.textBox1);
-            this.WorkGroupBox.Controls.Add(this.basicconfig);
-            this.WorkGroupBox.Controls.Add(this.waterYield);
+            this.WorkGroupBox.Controls.Add(this.remianWaterState);
             this.WorkGroupBox.Controls.Add(this.label19);
-            this.WorkGroupBox.Controls.Add(this.vStationName);
-            this.WorkGroupBox.Controls.Add(this.chkStationName);
-            this.WorkGroupBox.Controls.Add(this.OperatingParaModify);
-            this.WorkGroupBox.Controls.Add(this.chkUserName);
+            this.WorkGroupBox.Controls.Add(this.boxState);
+            this.WorkGroupBox.Controls.Add(this.remainWaterState);
             this.WorkGroupBox.Controls.Add(this.label16);
-            this.WorkGroupBox.Controls.Add(this.vTimeChoice);
-            this.WorkGroupBox.Controls.Add(this.chkTimeChoice);
-            this.WorkGroupBox.Controls.Add(this.vTimePeriod);
-            this.WorkGroupBox.Controls.Add(this.chkTimePeriod);
-            this.WorkGroupBox.Controls.Add(this.vVersionNum);
-            this.WorkGroupBox.Controls.Add(this.chkVersionNum);
-            this.WorkGroupBox.Controls.Add(this.vWorkStatus);
-            this.WorkGroupBox.Controls.Add(this.chkWorkStatus);
-            this.WorkGroupBox.Controls.Add(this.vVoltage);
-            this.WorkGroupBox.Controls.Add(this.vNormalState);
-            this.WorkGroupBox.Controls.Add(this.chkNormalState);
-            this.WorkGroupBox.Controls.Add(this.vStationCmdID);
-            this.WorkGroupBox.Controls.Add(this.chkStationCmdID);
+            this.WorkGroupBox.Controls.Add(this.flowState);
+            this.WorkGroupBox.Controls.Add(this.pumpState);
+            this.WorkGroupBox.Controls.Add(this.label26);
+            this.WorkGroupBox.Controls.Add(this.label23);
+            this.WorkGroupBox.Controls.Add(this.ICState);
             this.WorkGroupBox.Controls.Add(this.label6);
-            this.WorkGroupBox.Controls.Add(this.chkVoltage);
+            this.WorkGroupBox.Controls.Add(this.waterInsState);
+            this.WorkGroupBox.Controls.Add(this.label20);
+            this.WorkGroupBox.Controls.Add(this.label25);
+            this.WorkGroupBox.Controls.Add(this.label4);
             this.WorkGroupBox.Controls.Add(this.label5);
+            this.WorkGroupBox.Controls.Add(this.memoryState);
             this.WorkGroupBox.Controls.Add(this.label3);
-            this.WorkGroupBox.Controls.Add(this.chkLocalTime);
-            this.WorkGroupBox.Controls.Add(this.vClock);
-            this.WorkGroupBox.Controls.Add(this.chkClock);
+            this.WorkGroupBox.Controls.Add(this.waterState);
+            this.WorkGroupBox.Controls.Add(this.label24);
+            this.WorkGroupBox.Controls.Add(this.label17);
+            this.WorkGroupBox.Controls.Add(this.chkDestPhoneNum);
+            this.WorkGroupBox.Controls.Add(this.flowInsState);
+            this.WorkGroupBox.Controls.Add(this.label10);
+            this.WorkGroupBox.Controls.Add(this.label22);
+            this.WorkGroupBox.Controls.Add(this.ACState);
+            this.WorkGroupBox.Controls.Add(this.label21);
+            this.WorkGroupBox.Controls.Add(this.qualityState);
+            this.WorkGroupBox.Controls.Add(this.label7);
+            this.WorkGroupBox.Controls.Add(this.voltageState);
             this.WorkGroupBox.Location = new System.Drawing.Point(1, 71);
             this.WorkGroupBox.Name = "WorkGroupBox";
             this.WorkGroupBox.Size = new System.Drawing.Size(957, 117);
             this.WorkGroupBox.TabIndex = 3;
             this.WorkGroupBox.TabStop = false;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(832, 86);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(96, 21);
-            this.textBox1.TabIndex = 90;
-            // 
-            // basicconfig
-            // 
-            this.basicconfig.Location = new System.Drawing.Point(358, 56);
-            this.basicconfig.Name = "basicconfig";
-            this.basicconfig.Size = new System.Drawing.Size(96, 21);
-            this.basicconfig.TabIndex = 89;
-            // 
-            // waterYield
-            // 
-            this.waterYield.AutoSize = true;
-            this.waterYield.Location = new System.Drawing.Point(734, 91);
-            this.waterYield.Name = "waterYield";
-            this.waterYield.Size = new System.Drawing.Size(96, 16);
-            this.waterYield.TabIndex = 88;
-            this.waterYield.Tag = "key";
-            this.waterYield.Text = "水量定值控制";
-            this.waterYield.UseVisualStyleBackColor = true;
             // 
             // label19
             // 
@@ -585,110 +420,21 @@
             this.label19.Size = new System.Drawing.Size(0, 12);
             this.label19.TabIndex = 87;
             // 
-            // vStationName
-            // 
-            this.vStationName.Location = new System.Drawing.Point(578, 90);
-            this.vStationName.Name = "vStationName";
-            this.vStationName.Size = new System.Drawing.Size(96, 21);
-            this.vStationName.TabIndex = 86;
-            // 
-            // chkStationName
-            // 
-            this.chkStationName.AutoSize = true;
-            this.chkStationName.Location = new System.Drawing.Point(500, 92);
-            this.chkStationName.Name = "chkStationName";
-            this.chkStationName.Size = new System.Drawing.Size(72, 16);
-            this.chkStationName.TabIndex = 85;
-            this.chkStationName.Tag = "key";
-            this.chkStationName.Text = "查询水泵";
-            this.chkStationName.UseVisualStyleBackColor = true;
-            // 
-            // OperatingParaModify
-            // 
-            this.OperatingParaModify.Location = new System.Drawing.Point(358, 90);
-            this.OperatingParaModify.Name = "OperatingParaModify";
-            this.OperatingParaModify.Size = new System.Drawing.Size(96, 21);
-            this.OperatingParaModify.TabIndex = 84;
-            // 
-            // chkUserName
-            // 
-            this.chkUserName.AutoSize = true;
-            this.chkUserName.Location = new System.Drawing.Point(280, 95);
-            this.chkUserName.Name = "chkUserName";
-            this.chkUserName.Size = new System.Drawing.Size(84, 16);
-            this.chkUserName.TabIndex = 83;
-            this.chkUserName.Tag = "key";
-            this.chkUserName.Text = "改运行参数";
-            this.chkUserName.UseVisualStyleBackColor = true;
-            // 
             // label16
             // 
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(686, 27);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(11, 12);
+            this.label16.Size = new System.Drawing.Size(0, 12);
             this.label16.TabIndex = 76;
-            this.label16.Text = "v";
-            // 
-            // vNormalState
-            // 
-            this.vNormalState.FormattingEnabled = true;
-            this.vNormalState.Location = new System.Drawing.Point(812, 21);
-            this.vNormalState.Name = "vNormalState";
-            this.vNormalState.Size = new System.Drawing.Size(96, 20);
-            this.vNormalState.TabIndex = 66;
-            this.vNormalState.SelectedIndexChanged += new System.EventHandler(this.ComboBox_SelectedIndexChanged);
-            // 
-            // chkNormalState
-            // 
-            this.chkNormalState.AutoSize = true;
-            this.chkNormalState.Location = new System.Drawing.Point(734, 25);
-            this.chkNormalState.Name = "chkNormalState";
-            this.chkNormalState.Size = new System.Drawing.Size(72, 16);
-            this.chkNormalState.TabIndex = 65;
-            this.chkNormalState.Tag = "key";
-            this.chkNormalState.Text = "指定要素";
-            this.chkNormalState.UseVisualStyleBackColor = true;
-            // 
-            // vStationCmdID
-            // 
-            this.vStationCmdID.Location = new System.Drawing.Point(105, 56);
-            this.vStationCmdID.Name = "vStationCmdID";
-            this.vStationCmdID.ReadOnly = true;
-            this.vStationCmdID.Size = new System.Drawing.Size(96, 21);
-            this.vStationCmdID.TabIndex = 64;
-            // 
-            // chkStationCmdID
-            // 
-            this.chkStationCmdID.AutoSize = true;
-            this.chkStationCmdID.Location = new System.Drawing.Point(27, 58);
-            this.chkStationCmdID.Name = "chkStationCmdID";
-            this.chkStationCmdID.Size = new System.Drawing.Size(72, 16);
-            this.chkStationCmdID.TabIndex = 63;
-            this.chkStationCmdID.Tag = "key";
-            this.chkStationCmdID.Text = "时段数据";
-            this.chkStationCmdID.UseVisualStyleBackColor = true;
-            this.chkStationCmdID.CheckedChanged += new System.EventHandler(this.chkStationCmdID_CheckedChanged);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(597, 27);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(23, 12);
+            this.label6.Size = new System.Drawing.Size(0, 12);
             this.label6.TabIndex = 62;
-            this.label6.Text = "(V)";
-            // 
-            // chkVoltage
-            // 
-            this.chkVoltage.AutoSize = true;
-            this.chkVoltage.Location = new System.Drawing.Point(500, 26);
-            this.chkVoltage.Name = "chkVoltage";
-            this.chkVoltage.Size = new System.Drawing.Size(84, 16);
-            this.chkVoltage.TabIndex = 60;
-            this.chkVoltage.Tag = "key";
-            this.chkVoltage.Text = "读基本配置";
-            this.chkVoltage.UseVisualStyleBackColor = true;
             // 
             // label3
             // 
@@ -697,43 +443,6 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(0, 12);
             this.label3.TabIndex = 58;
-            // 
-            // chkLocalTime
-            // 
-            this.chkLocalTime.AutoSize = true;
-            this.chkLocalTime.Location = new System.Drawing.Point(280, 24);
-            this.chkLocalTime.Name = "chkLocalTime";
-            this.chkLocalTime.Size = new System.Drawing.Size(72, 16);
-            this.chkLocalTime.TabIndex = 57;
-            this.chkLocalTime.Text = "本机时间";
-            this.chkLocalTime.UseVisualStyleBackColor = true;
-            this.chkLocalTime.CheckedChanged += new System.EventHandler(this.chkLocalTime_CheckedChanged);
-            // 
-            // vClock
-            // 
-            this.vClock.CalendarForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.vClock.CalendarMonthBackground = System.Drawing.SystemColors.HotTrack;
-            this.vClock.CalendarTitleBackColor = System.Drawing.SystemColors.MenuHighlight;
-            this.vClock.CalendarTitleForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.vClock.CalendarTrailingForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.vClock.CustomFormat = "yyyy-MM-dd HH:mm:ss";
-            this.vClock.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.vClock.Location = new System.Drawing.Point(105, 23);
-            this.vClock.Name = "vClock";
-            this.vClock.ShowUpDown = true;
-            this.vClock.Size = new System.Drawing.Size(156, 21);
-            this.vClock.TabIndex = 55;
-            // 
-            // chkClock
-            // 
-            this.chkClock.AutoSize = true;
-            this.chkClock.Location = new System.Drawing.Point(27, 26);
-            this.chkClock.Name = "chkClock";
-            this.chkClock.Size = new System.Drawing.Size(72, 16);
-            this.chkClock.TabIndex = 53;
-            this.chkClock.Tag = "key";
-            this.chkClock.Text = "实时遥测";
-            this.chkClock.UseVisualStyleBackColor = true;
             // 
             // cmbMsgType
             // 
@@ -802,7 +511,7 @@
             // chkAvegTime
             // 
             this.chkAvegTime.AutoSize = true;
-            this.chkAvegTime.Location = new System.Drawing.Point(715, 59);
+            this.chkAvegTime.Location = new System.Drawing.Point(292, 20);
             this.chkAvegTime.Name = "chkAvegTime";
             this.chkAvegTime.Size = new System.Drawing.Size(108, 16);
             this.chkAvegTime.TabIndex = 70;
@@ -822,7 +531,7 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 125F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(941, 704);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(943, 704);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // panel2
@@ -857,32 +566,10 @@
             // 
             // panel12
             // 
-            this.panel12.Controls.Add(this.remianWaterState);
-            this.panel12.Controls.Add(this.remainWaterState);
-            this.panel12.Controls.Add(this.pumpState);
-            this.panel12.Controls.Add(this.label26);
-            this.panel12.Controls.Add(this.ICState);
-            this.panel12.Controls.Add(this.label25);
-            this.panel12.Controls.Add(this.memoryState);
-            this.panel12.Controls.Add(this.label24);
-            this.panel12.Controls.Add(this.boxState);
-            this.panel12.Controls.Add(this.label23);
-            this.panel12.Controls.Add(this.waterInsState);
-            this.panel12.Controls.Add(this.label4);
-            this.panel12.Controls.Add(this.flowInsState);
-            this.panel12.Controls.Add(this.qualityState);
-            this.panel12.Controls.Add(this.label22);
-            this.panel12.Controls.Add(this.label21);
-            this.panel12.Controls.Add(this.flowState);
-            this.panel12.Controls.Add(this.label20);
-            this.panel12.Controls.Add(this.waterState);
-            this.panel12.Controls.Add(this.label17);
-            this.panel12.Controls.Add(this.voltageState);
-            this.panel12.Controls.Add(this.label7);
-            this.panel12.Controls.Add(this.ACState);
-            this.panel12.Controls.Add(this.label10);
+            this.panel12.Controls.Add(this.label27);
+            this.panel12.Controls.Add(this.btnSend);
             this.panel12.Controls.Add(this.label9);
-            this.panel12.Controls.Add(this.chkDestPhoneNum);
+            this.panel12.Controls.Add(this.vCustomCmd);
             this.panel12.Location = new System.Drawing.Point(1, 428);
             this.panel12.Name = "panel12";
             this.panel12.Size = new System.Drawing.Size(958, 84);
@@ -890,7 +577,7 @@
             // 
             // remianWaterState
             // 
-            this.remianWaterState.Location = new System.Drawing.Point(822, 60);
+            this.remianWaterState.Location = new System.Drawing.Point(822, 96);
             this.remianWaterState.Name = "remianWaterState";
             this.remianWaterState.Size = new System.Drawing.Size(61, 21);
             this.remianWaterState.TabIndex = 120;
@@ -898,7 +585,7 @@
             // remainWaterState
             // 
             this.remainWaterState.AutoSize = true;
-            this.remainWaterState.Location = new System.Drawing.Point(715, 63);
+            this.remainWaterState.Location = new System.Drawing.Point(711, 93);
             this.remainWaterState.Name = "remainWaterState";
             this.remainWaterState.Size = new System.Drawing.Size(77, 12);
             this.remainWaterState.TabIndex = 119;
@@ -906,7 +593,7 @@
             // 
             // pumpState
             // 
-            this.pumpState.Location = new System.Drawing.Point(588, 60);
+            this.pumpState.Location = new System.Drawing.Point(613, 90);
             this.pumpState.Name = "pumpState";
             this.pumpState.Size = new System.Drawing.Size(61, 21);
             this.pumpState.TabIndex = 118;
@@ -914,7 +601,7 @@
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(478, 63);
+            this.label26.Location = new System.Drawing.Point(498, 93);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(77, 12);
             this.label26.TabIndex = 117;
@@ -922,7 +609,7 @@
             // 
             // ICState
             // 
-            this.ICState.Location = new System.Drawing.Point(382, 59);
+            this.ICState.Location = new System.Drawing.Point(403, 90);
             this.ICState.Name = "ICState";
             this.ICState.Size = new System.Drawing.Size(61, 21);
             this.ICState.TabIndex = 116;
@@ -930,7 +617,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(287, 63);
+            this.label25.Location = new System.Drawing.Point(299, 93);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(77, 12);
             this.label25.TabIndex = 115;
@@ -938,7 +625,7 @@
             // 
             // memoryState
             // 
-            this.memoryState.Location = new System.Drawing.Point(186, 59);
+            this.memoryState.Location = new System.Drawing.Point(206, 93);
             this.memoryState.Name = "memoryState";
             this.memoryState.Size = new System.Drawing.Size(61, 21);
             this.memoryState.TabIndex = 114;
@@ -946,7 +633,7 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(82, 63);
+            this.label24.Location = new System.Drawing.Point(88, 93);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(65, 12);
             this.label24.TabIndex = 113;
@@ -954,7 +641,7 @@
             // 
             // boxState
             // 
-            this.boxState.Location = new System.Drawing.Point(822, 32);
+            this.boxState.Location = new System.Drawing.Point(822, 59);
             this.boxState.Name = "boxState";
             this.boxState.Size = new System.Drawing.Size(61, 21);
             this.boxState.TabIndex = 112;
@@ -962,7 +649,7 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(717, 39);
+            this.label23.Location = new System.Drawing.Point(711, 56);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(77, 12);
             this.label23.TabIndex = 111;
@@ -970,7 +657,7 @@
             // 
             // waterInsState
             // 
-            this.waterInsState.Location = new System.Drawing.Point(588, 33);
+            this.waterInsState.Location = new System.Drawing.Point(613, 59);
             this.waterInsState.Name = "waterInsState";
             this.waterInsState.Size = new System.Drawing.Size(61, 21);
             this.waterInsState.TabIndex = 110;
@@ -978,7 +665,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(478, 39);
+            this.label4.Location = new System.Drawing.Point(498, 59);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(77, 12);
             this.label4.TabIndex = 109;
@@ -986,14 +673,14 @@
             // 
             // flowInsState
             // 
-            this.flowInsState.Location = new System.Drawing.Point(382, 32);
+            this.flowInsState.Location = new System.Drawing.Point(403, 56);
             this.flowInsState.Name = "flowInsState";
             this.flowInsState.Size = new System.Drawing.Size(61, 21);
             this.flowInsState.TabIndex = 108;
             // 
             // qualityState
             // 
-            this.qualityState.Location = new System.Drawing.Point(186, 32);
+            this.qualityState.Location = new System.Drawing.Point(206, 56);
             this.qualityState.Name = "qualityState";
             this.qualityState.Size = new System.Drawing.Size(61, 21);
             this.qualityState.TabIndex = 107;
@@ -1001,7 +688,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(287, 39);
+            this.label22.Location = new System.Drawing.Point(299, 56);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(77, 12);
             this.label22.TabIndex = 106;
@@ -1010,7 +697,7 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(79, 39);
+            this.label21.Location = new System.Drawing.Point(88, 62);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(101, 12);
             this.label21.TabIndex = 105;
@@ -1018,7 +705,7 @@
             // 
             // flowState
             // 
-            this.flowState.Location = new System.Drawing.Point(822, 3);
+            this.flowState.Location = new System.Drawing.Point(822, 14);
             this.flowState.Name = "flowState";
             this.flowState.Size = new System.Drawing.Size(61, 21);
             this.flowState.TabIndex = 104;
@@ -1026,7 +713,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(715, 9);
+            this.label20.Location = new System.Drawing.Point(705, 18);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(101, 12);
             this.label20.TabIndex = 103;
@@ -1034,7 +721,7 @@
             // 
             // waterState
             // 
-            this.waterState.Location = new System.Drawing.Point(588, 6);
+            this.waterState.Location = new System.Drawing.Point(614, 15);
             this.waterState.Name = "waterState";
             this.waterState.Size = new System.Drawing.Size(61, 21);
             this.waterState.TabIndex = 102;
@@ -1042,7 +729,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(478, 12);
+            this.label17.Location = new System.Drawing.Point(496, 21);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(101, 12);
             this.label17.TabIndex = 101;
@@ -1050,7 +737,7 @@
             // 
             // voltageState
             // 
-            this.voltageState.Location = new System.Drawing.Point(382, 6);
+            this.voltageState.Location = new System.Drawing.Point(403, 18);
             this.voltageState.Name = "voltageState";
             this.voltageState.Size = new System.Drawing.Size(61, 21);
             this.voltageState.TabIndex = 100;
@@ -1058,7 +745,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(287, 9);
+            this.label7.Location = new System.Drawing.Point(299, 23);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(89, 12);
             this.label7.TabIndex = 99;
@@ -1066,7 +753,7 @@
             // 
             // ACState
             // 
-            this.ACState.Location = new System.Drawing.Point(186, 3);
+            this.ACState.Location = new System.Drawing.Point(206, 20);
             this.ACState.Name = "ACState";
             this.ACState.Size = new System.Drawing.Size(61, 21);
             this.ACState.TabIndex = 98;
@@ -1074,7 +761,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(82, 9);
+            this.label10.Location = new System.Drawing.Point(88, 26);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(89, 12);
             this.label10.TabIndex = 92;
@@ -1091,7 +778,7 @@
             // chkDestPhoneNum
             // 
             this.chkDestPhoneNum.AutoSize = true;
-            this.chkDestPhoneNum.Location = new System.Drawing.Point(1, 32);
+            this.chkDestPhoneNum.Location = new System.Drawing.Point(6, 58);
             this.chkDestPhoneNum.Name = "chkDestPhoneNum";
             this.chkDestPhoneNum.Size = new System.Drawing.Size(72, 16);
             this.chkDestPhoneNum.TabIndex = 60;
@@ -1111,12 +798,10 @@
             this.SensorGroupBox.Controls.Add(this.chkC);
             this.SensorGroupBox.Controls.Add(this.vC);
             this.SensorGroupBox.Controls.Add(this.vK);
-            this.SensorGroupBox.Controls.Add(this.vAvegTime);
             this.SensorGroupBox.Controls.Add(this.label11);
             this.SensorGroupBox.Controls.Add(this.chkRain);
             this.SensorGroupBox.Controls.Add(this.vSelectCollectionParagraphs);
             this.SensorGroupBox.Controls.Add(this.chkSelectCollectionParagraphs);
-            this.SensorGroupBox.Controls.Add(this.chkAvegTime);
             this.SensorGroupBox.Controls.Add(this.chkK);
             this.SensorGroupBox.Controls.Add(this.chkWaterPlusReportedValue);
             this.SensorGroupBox.Controls.Add(this.chkRainPlusReportedValue);
@@ -1211,7 +896,7 @@
             // 
             // vAvegTime
             // 
-            this.vAvegTime.Location = new System.Drawing.Point(821, 58);
+            this.vAvegTime.Location = new System.Drawing.Point(418, 15);
             this.vAvegTime.Name = "vAvegTime";
             this.vAvegTime.Size = new System.Drawing.Size(96, 21);
             this.vAvegTime.TabIndex = 82;
@@ -1324,9 +1009,9 @@
             this.label15.AutoSize = true;
             this.label15.Location = new System.Drawing.Point(10, 4);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(65, 12);
+            this.label15.Size = new System.Drawing.Size(53, 12);
             this.label15.TabIndex = 0;
-            this.label15.Text = "传感器配置";
+            this.label15.Text = "通讯配置";
             // 
             // panel9
             // 
@@ -1345,7 +1030,7 @@
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(53, 12);
             this.label14.TabIndex = 0;
-            this.label14.Text = "通讯配置";
+            this.label14.Text = "基本配置";
             // 
             // panel8
             // 
@@ -1368,46 +1053,26 @@
             // 
             // CommGroupBox
             // 
-            this.CommGroupBox.Controls.Add(this.newPwd);
-            this.CommGroupBox.Controls.Add(this.oldPwd);
-            this.CommGroupBox.Controls.Add(this.memoryReset);
-            this.CommGroupBox.Controls.Add(this.chkViceChannel);
-            this.CommGroupBox.Controls.Add(this.ICset);
             this.CommGroupBox.Controls.Add(this.vRingsNum);
             this.CommGroupBox.Controls.Add(this.vClockTime);
-            this.CommGroupBox.Controls.Add(this.vDestPhoneNum);
-            this.CommGroupBox.Controls.Add(this.vViceChannel);
-            this.CommGroupBox.Controls.Add(this.vMainChannel);
             this.CommGroupBox.Controls.Add(this.chkRingsNum);
-            this.CommGroupBox.Controls.Add(this.chkRespBeam);
+            this.CommGroupBox.Controls.Add(this.vVersionNum);
             this.CommGroupBox.Controls.Add(this.chkTerminalNum);
-            this.CommGroupBox.Controls.Add(this.vTeleNum);
-            this.CommGroupBox.Controls.Add(this.chkTeleNum);
-            this.CommGroupBox.Controls.Add(this.chkMainChannel);
+            this.CommGroupBox.Controls.Add(this.chkVersionNum);
+            this.CommGroupBox.Controls.Add(this.memoryReset);
+            this.CommGroupBox.Controls.Add(this.chkAvegTime);
+            this.CommGroupBox.Controls.Add(this.vDestPhoneNum);
+            this.CommGroupBox.Controls.Add(this.vAvegTime);
             this.CommGroupBox.Location = new System.Drawing.Point(1, 204);
             this.CommGroupBox.Name = "CommGroupBox";
             this.CommGroupBox.Size = new System.Drawing.Size(960, 96);
             this.CommGroupBox.TabIndex = 4;
             this.CommGroupBox.TabStop = false;
             // 
-            // newPwd
-            // 
-            this.newPwd.Location = new System.Drawing.Point(218, 11);
-            this.newPwd.Name = "newPwd";
-            this.newPwd.Size = new System.Drawing.Size(96, 21);
-            this.newPwd.TabIndex = 88;
-            // 
-            // oldPwd
-            // 
-            this.oldPwd.Location = new System.Drawing.Point(105, 11);
-            this.oldPwd.Name = "oldPwd";
-            this.oldPwd.Size = new System.Drawing.Size(96, 21);
-            this.oldPwd.TabIndex = 87;
-            // 
             // memoryReset
             // 
             this.memoryReset.AutoSize = true;
-            this.memoryReset.Location = new System.Drawing.Point(734, 64);
+            this.memoryReset.Location = new System.Drawing.Point(565, 20);
             this.memoryReset.Name = "memoryReset";
             this.memoryReset.Size = new System.Drawing.Size(108, 16);
             this.memoryReset.TabIndex = 86;
@@ -1415,58 +1080,13 @@
             this.memoryReset.Text = "初始化固态存储";
             this.memoryReset.UseVisualStyleBackColor = true;
             // 
-            // chkViceChannel
-            // 
-            this.chkViceChannel.AutoSize = true;
-            this.chkViceChannel.Location = new System.Drawing.Point(43, 67);
-            this.chkViceChannel.Name = "chkViceChannel";
-            this.chkViceChannel.Size = new System.Drawing.Size(41, 12);
-            this.chkViceChannel.TabIndex = 85;
-            this.chkViceChannel.Text = "新密码";
-            // 
-            // ICset
-            // 
-            this.ICset.Location = new System.Drawing.Point(578, 64);
-            this.ICset.Name = "ICset";
-            this.ICset.Size = new System.Drawing.Size(96, 21);
-            this.ICset.TabIndex = 84;
-            // 
-            // vTeleNum
-            // 
-            this.vTeleNum.Location = new System.Drawing.Point(578, 24);
-            this.vTeleNum.Name = "vTeleNum";
-            this.vTeleNum.Size = new System.Drawing.Size(96, 21);
-            this.vTeleNum.TabIndex = 64;
-            // 
-            // chkTeleNum
-            // 
-            this.chkTeleNum.AutoSize = true;
-            this.chkTeleNum.Location = new System.Drawing.Point(500, 28);
-            this.chkTeleNum.Name = "chkTeleNum";
-            this.chkTeleNum.Size = new System.Drawing.Size(72, 16);
-            this.chkTeleNum.TabIndex = 63;
-            this.chkTeleNum.Tag = "key";
-            this.chkTeleNum.Text = "事件记录";
-            this.chkTeleNum.UseVisualStyleBackColor = true;
-            // 
-            // chkMainChannel
-            // 
-            this.chkMainChannel.AutoSize = true;
-            this.chkMainChannel.Location = new System.Drawing.Point(27, 29);
-            this.chkMainChannel.Name = "chkMainChannel";
-            this.chkMainChannel.Size = new System.Drawing.Size(72, 16);
-            this.chkMainChannel.TabIndex = 53;
-            this.chkMainChannel.Tag = "key";
-            this.chkMainChannel.Text = "修改密码";
-            this.chkMainChannel.UseVisualStyleBackColor = true;
-            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.tableLayoutPanel1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(941, 704);
+            this.panel1.Size = new System.Drawing.Size(943, 704);
             this.panel1.TabIndex = 1;
             // 
             // statusStrip1
@@ -1475,16 +1095,25 @@
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip1.Location = new System.Drawing.Point(0, 682);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(941, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(943, 22);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(14, 32);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(53, 12);
+            this.label27.TabIndex = 70;
+            this.label27.Text = "测站选择";
             // 
             // CReadAndSettingMgrForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.ClientSize = new System.Drawing.Size(941, 704);
+            this.ClientSize = new System.Drawing.Size(943, 704);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -1494,7 +1123,6 @@
             this.Name = "CReadAndSettingMgrForm";
             this.Text = "参数配置";
             ((System.ComponentModel.ISupportInitialize)(this.vRingsNum)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.vVoltage)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.panel4.ResumeLayout(false);
@@ -1533,20 +1161,10 @@
 
         private System.Windows.Forms.NumericUpDown vRingsNum;
         private System.Windows.Forms.TextBox vClockTime;
-        private System.Windows.Forms.ComboBox vTimeChoice;
         private System.Windows.Forms.TextBox vDestPhoneNum;
         private System.Windows.Forms.CheckBox chkVersionNum;
-        private System.Windows.Forms.ComboBox vViceChannel;
-        private System.Windows.Forms.ComboBox vWorkStatus;
-        private System.Windows.Forms.CheckBox chkWorkStatus;
-        private System.Windows.Forms.ComboBox vMainChannel;
-        private System.Windows.Forms.CheckBox chkTimeChoice;
-        private System.Windows.Forms.ComboBox vTimePeriod;
-        private System.Windows.Forms.CheckBox chkTimePeriod;
         private System.Windows.Forms.TextBox vVersionNum;
         private System.Windows.Forms.CheckBox chkRingsNum;
-        private System.Windows.Forms.NumericUpDown vVoltage;
-        private System.Windows.Forms.CheckBox chkRespBeam;
         private System.Windows.Forms.CheckBox chkTerminalNum;
         private System.Windows.Forms.Label lblGprs;
         private System.Windows.Forms.Label label5;
@@ -1559,16 +1177,8 @@
         private System.Windows.Forms.Button btn_Read;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.GroupBox WorkGroupBox;
-        private System.Windows.Forms.ComboBox vNormalState;
-        private System.Windows.Forms.CheckBox chkNormalState;
-        private System.Windows.Forms.TextBox vStationCmdID;
-        private System.Windows.Forms.CheckBox chkStationCmdID;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.CheckBox chkVoltage;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.CheckBox chkLocalTime;
-        private System.Windows.Forms.DateTimePicker vClock;
-        private System.Windows.Forms.CheckBox chkClock;
         private System.Windows.Forms.ComboBox cmbMsgType;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label11;
@@ -1586,10 +1196,7 @@
         private System.Windows.Forms.CheckBox chkWater;
         private System.Windows.Forms.CheckBox chkStationType;
         private System.Windows.Forms.GroupBox CommGroupBox;
-        private System.Windows.Forms.TextBox vTeleNum;
-        private System.Windows.Forms.CheckBox chkTeleNum;
         private System.Windows.Forms.CheckBox chkDestPhoneNum;
-        private System.Windows.Forms.CheckBox chkMainChannel;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.Label label12;
@@ -1602,10 +1209,8 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.TextBox vAvegTime;
         private System.Windows.Forms.TextBox vK;
-        private System.Windows.Forms.TextBox ICset;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.Label chkViceChannel;
         private System.Windows.Forms.TextBox vC;
         private System.Windows.Forms.Label chkC;
         private System.Windows.Forms.Panel panel6;
@@ -1616,25 +1221,16 @@
         private System.Windows.Forms.NumericUpDown vWaterPlusReportedValue;
         private System.Windows.Forms.NumericUpDown vRainPlusReportedValue;
         private System.Windows.Forms.Button btnSend;
-        private System.Windows.Forms.TextBox vStationName;
-        private System.Windows.Forms.CheckBox chkStationName;
-        private System.Windows.Forms.TextBox OperatingParaModify;
-        private System.Windows.Forms.CheckBox chkUserName;
         private System.Windows.Forms.Panel panel12;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox vCustomCmd;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.CheckBox waterYield;
         private System.Windows.Forms.CheckBox memoryReset;
         private System.Windows.Forms.TextBox valveCtrl;
         private System.Windows.Forms.TextBox gateCtrl;
-        private System.Windows.Forms.TextBox newPwd;
-        private System.Windows.Forms.TextBox oldPwd;
         private System.Windows.Forms.TextBox pumpCtrl;
-        private System.Windows.Forms.TextBox basicconfig;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox remianWaterState;
         private System.Windows.Forms.Label remainWaterState;
         private System.Windows.Forms.TextBox pumpState;
@@ -1658,5 +1254,6 @@
         private System.Windows.Forms.TextBox voltageState;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox ACState;
+        private System.Windows.Forms.Label label27;
     }
 }

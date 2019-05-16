@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Hydrology.DBManager.Interface;
 using Hydrology.Entity;
+using System.Threading;
 
 namespace Hydrology.DBManager.DB.SQLServer
 {
@@ -709,7 +710,7 @@ namespace Hydrology.DBManager.DB.SQLServer
                 batchInsertWaterList.Clear();
             }
             
-            if (waterList.Count <= 500)
+            if (waterList.Count <= 1000)
             {
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 string suffix = "/water/insertWater";
@@ -741,13 +742,13 @@ namespace Hydrology.DBManager.DB.SQLServer
             }
             else
             {
-                CDBLog.Instance.AddInfo(string.Format("数据量大于500条，则分批插入", waterList.Count));
+                CDBLog.Instance.AddInfo(string.Format("数据量大于1000条，则分批插入", waterList.Count));
                 List<CEntityWater> waters = new List<CEntityWater>();
                 
                 for(int i = 0; i < waterList.Count; i++)
                 {
                     waters.Add(waterList[i]);
-                    if((i+1)% 500 == 0)
+                    if((i+1)% 1000 == 0)
                     {
                         Dictionary<string, object> param = new Dictionary<string, object>();
                         string suffix = "/water/insertWater";
@@ -808,6 +809,7 @@ namespace Hydrology.DBManager.DB.SQLServer
                             
                         }
                     }
+                    Thread.Sleep(200);
                 }
                 return;
             }

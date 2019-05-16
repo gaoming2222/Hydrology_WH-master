@@ -83,25 +83,25 @@ namespace Hydrology.Forms
             {
                 m_vNormalStateLists.Add(item.Value);
             }
-            this.vNormalState.DataSource = m_vNormalStateLists;
+            //this.vNormalState.DataSource = m_vNormalStateLists;
             //  初始化工作状态,并绑定控件
             foreach (var item in ProtocolMaps.WorkStatus4UI)
             {
                 m_vWorkStatusLists.Add(item.Value);
             }
-            this.vWorkStatus.DataSource = m_vWorkStatusLists;
+            //this.vWorkStatus.DataSource = m_vWorkStatusLists;
             //  初始化定时段次
             foreach (var item in ProtocolMaps.TimePeriodMap)
             {
                 m_vTimePeriodLists.Add(Int32.Parse(item.Value));
             }
-            this.vTimePeriod.DataSource = m_vTimePeriodLists;
+            //this.vTimePeriod.DataSource = m_vTimePeriodLists;
             //  初始化对时选择
             foreach (var item in ProtocolMaps.TimeChoice4UI)
             {
                 m_vTimeChoiceLists.Add(item.Value);
             }
-            this.vTimeChoice.DataSource = m_vTimeChoiceLists;
+            //this.vTimeChoice.DataSource = m_vTimeChoiceLists;
             //  初始化主用信道
             m_vMainChannelLists = new List<String>()
             {
@@ -111,7 +111,7 @@ namespace Hydrology.Forms
                 EChannelType.PSTN.ToString(),
                 EChannelType.VHF.ToString()
             };
-            this.vMainChannel.DataSource = m_vMainChannelLists;
+            //this.vMainChannel.DataSource = m_vMainChannelLists;
             //  初始化备用信道
             m_vViceChannelLists = new List<String>()
             {
@@ -122,7 +122,7 @@ namespace Hydrology.Forms
                 EChannelType.VHF.ToString(),
                 ProtocolMaps.ChannelType4UIMap.FindValue(EChannelType.None)
             };
-            this.vViceChannel.DataSource = m_vViceChannelLists;
+            //this.vViceChannel.DataSource = m_vViceChannelLists;
             //  初始化采集端次选
             foreach (var item in ProtocolMaps.SelectCollectionParagraphs4UIMap)
             {
@@ -134,34 +134,34 @@ namespace Hydrology.Forms
         {
             /************工作配置*****************/
             //  初始化时钟
-            this.vClock.Value = DateTime.Now;
+            //this.vClock.Value = DateTime.Now;
             //  初始化电压
-            this.vVoltage.Value = 0;
+            //this.vVoltage.Value = 0;
             //  初始化站号
-            this.vStationCmdID.Text = string.Empty;
+            //this.vStationCmdID.Text = string.Empty;
             //  初始化常规状态
-            this.vNormalState.SelectedIndex = 0;
+            //this.vNormalState.SelectedIndex = 0;
             //  初始化版本号
             this.vVersionNum.Text = string.Empty;
             //  初始化工作状态
-            this.vWorkStatus.SelectedIndex = 1;
+            //this.vWorkStatus.SelectedIndex = 1;
             //  初始化定时段次
-            this.vTimePeriod.SelectedIndex = 6;
+            //this.vTimePeriod.SelectedIndex = 6;
             //  初始化对时选择
-            this.vTimeChoice.SelectedIndex = 0;
+            //this.vTimeChoice.SelectedIndex = 0;
             /************通訊配置*****************/
             //  初始化主备信道
-            this.vMainChannel.SelectedIndex = 0;
+            //this.vMainChannel.SelectedIndex = 0;
             //  初始化备用信道
-            this.vViceChannel.SelectedIndex = 1;
+            //this.vViceChannel.SelectedIndex = 1;
             //  初始化目的地手机
             this.vDestPhoneNum.Text = string.Empty;
             //  初始化SIM卡号
-            this.vTeleNum.Text = string.Empty;
+            //this.vTeleNum.Text = string.Empty;
             //  初始化终端机号
             this.vClockTime.Text = string.Empty;
             //  初始化响应波束
-            this.ICset.Text = string.Empty;
+            //this.ICset.Text = string.Empty;
             //  初始化振铃次数
             this.vRingsNum.Value = 1;
 
@@ -337,7 +337,7 @@ namespace Hydrology.Forms
                     {
                         string normalState = info.Alarm.Substring(0, 3);
                         string binaryStr = HexString2BinString(normalState);
-                        binaryStr.Replace(" ","");
+                        binaryStr = binaryStr.Replace(" ","");
 
                         string ACState = string.Empty;
                         string voltageState = string.Empty;
@@ -351,7 +351,7 @@ namespace Hydrology.Forms
                         string ICState = string.Empty;
                         string pumpState = string.Empty;
                         string remianWaterState = string.Empty;
-                        for (int i = 0; i < binaryStr.Length-1; i++)
+                        for (int i = 0; i < binaryStr.Length; i++)
                         {
                             string flag = binaryStr.Substring(i, 1);
                             if(i == 0)
@@ -501,7 +501,7 @@ namespace Hydrology.Forms
                             //string ICState = string.Empty;
                             //string pumpState = string.Empty;
                             //string remianWaterState = string.Empty;
-                            this.vWorkStatus.Invoke((Action)delegate
+                            this.ACState.Invoke((Action)delegate
                             {
                                 this.ACState.Text = ACState;
                                 this.voltageState.Text = voltageState;
@@ -846,63 +846,63 @@ namespace Hydrology.Forms
                 //  配置参数
                 #region 配置参数
                 var cmds = new List<EDownParamGY>();
-                if (this.chkClock.Checked)
-                {
-                    cmds.Add(EDownParamGY.Rdata);
-                }
-                if (this.chkVoltage.Checked)
-                {
-                    cmds.Add(EDownParamGY.basicConfigRead);
-                }
-                if (this.chkStationCmdID.Checked)
-                {
-                    cmds.Add(EDownParamGY.timeFrom_To);
-                }
-                if (this.chkNormalState.Checked)
-                {
-                    cmds.Add(EDownParamGY.Selement);
-                }
+                //if (this.chkClock.Checked)
+                //{
+                //    cmds.Add(EDownParamGY.Rdata);
+                //}
+                //if (this.chkVoltage.Checked)
+                //{
+                //    cmds.Add(EDownParamGY.basicConfigRead);
+                //}
+                //if (this.chkStationCmdID.Checked)
+                //{
+                //    cmds.Add(EDownParamGY.timeFrom_To);
+                //}
+                //if (this.chkNormalState.Checked)
+                //{
+                //    cmds.Add(EDownParamGY.Selement);
+                //}
                 if (this.chkVersionNum.Checked)
                 {
                     cmds.Add(EDownParamGY.version);
                 }
-                if (this.chkWorkStatus.Checked)
-                {
-                    cmds.Add(EDownParamGY.basicConfigModify);                                                                                                                                                                                                                                                                                                                                                                                          
-                }
-                if (this.chkTimePeriod.Checked)
-                {
-                    cmds.Add(EDownParamGY.operatingParaRead);
-                }
-                if (this.chkTimeChoice.Checked)
-                {
-                    cmds.Add(EDownParamGY.ArtifN);
-                }
-                if (this.chkMainChannel.Checked)
-                {
-                    cmds.Add(EDownParamGY.oldPwd);
-                    cmds.Add(EDownParamGY.newPwd);
-                }
+                //if (this.chkWorkStatus.Checked)
+                //{
+                //    cmds.Add(EDownParamGY.basicConfigModify);                                                                                                                                                                                                                                                                                                                                                                                          
+                //}
+                //if (this.chkTimePeriod.Checked)
+                //{
+                //    cmds.Add(EDownParamGY.operatingParaRead);
+                //}
+                //if (this.chkTimeChoice.Checked)
+                //{
+                //    cmds.Add(EDownParamGY.ArtifN);
+                //}
+                //if (this.chkMainChannel.Checked)
+                //{
+                //    cmds.Add(EDownParamGY.oldPwd);
+                //    cmds.Add(EDownParamGY.newPwd);
+                //}
                 if (this.chkDestPhoneNum.Checked)
                 {
                     cmds.Add(EDownParamGY.alarm);
                 }
-                if (this.chkTeleNum.Checked)
-                {
-                    cmds.Add(EDownParamGY.history);
-                }
-                if (this.waterYield.Checked)
-                {
-                    cmds.Add(EDownParamGY.waterYield);
-                }
+                //if (this.chkTeleNum.Checked)
+                //{
+                //    cmds.Add(EDownParamGY.history);
+                //}
+                //if (this.waterYield.Checked)
+                //{
+                //    cmds.Add(EDownParamGY.waterYield);
+                //}
                 if (this.chkTerminalNum.Checked)
                 {
                     cmds.Add(EDownParamGY.clocksearch);
                 }
-                if (this.chkRespBeam.Checked)
-                {
-                    cmds.Add(EDownParamGY.ICconfig);
-                }
+                //if (this.chkRespBeam.Checked)
+                //{
+                //    cmds.Add(EDownParamGY.ICconfig);
+                //}
                 if (this.chkRingsNum.Checked)
                 {
                     cmds.Add(EDownParamGY.Reset);
@@ -943,14 +943,14 @@ namespace Hydrology.Forms
                     //{
                     //    cmds.Add(EDownParam.SelectCollectionParagraphs);
                     //}
-                    if (this.chkUserName.Checked)
-                {
-                    cmds.Add(EDownParamGY.operatingParaModify);
-                }
-                if (this.chkStationName.Checked)
-                {
-                    cmds.Add(EDownParamGY.pumpRead);
-                }
+                //    if (this.chkUserName.Checked)
+                //{
+                //    cmds.Add(EDownParamGY.operatingParaModify);
+                //}
+                //if (this.chkStationName.Checked)
+                //{
+                //    cmds.Add(EDownParamGY.pumpRead);
+                //}
                 if (cmds.Count == 0)
                 {
                     MessageBox.Show("请选择参数!");
@@ -1339,37 +1339,37 @@ namespace Hydrology.Forms
 
                 //  配置参数
                 #region 配置参数
-                if (this.chkClock.Checked)
-                {
-                    cmds.Add(EDownParam.Clock);
-                    down.Clock = this.chkLocalTime.Checked ? DateTime.Now : this.vClock.Value;
-                }
-                if (this.chkVoltage.Checked)
-                {
-                    MessageBox.Show("电压不允许设置");
-                    this.chkVoltage.Checked = false;
-                    return;
-                }
-                if (this.chkStationCmdID.Checked)
-                {
-                    MessageBox.Show("站号不允许设置");
-                    this.chkStationCmdID.Checked = false;
-                    return;
-                }
-                if (this.chkNormalState.Checked)
-                {
-                    cmds.Add(EDownParam.NormalState);
-                    var normalState = this.vNormalState.Text.Trim();
-                    if (this.m_vNormalStateLists.Contains(normalState))
-                    {
-                        down.NormalState = ProtocolMaps.NormalState4UI.FindKey(normalState);
-                    }
-                    else
-                    {
-                        MessageBox.Show("常规状态 参数不是合法的!");
-                        return;
-                    }
-                }
+                //if (this.chkClock.Checked)
+                //{
+                //    cmds.Add(EDownParam.Clock);
+                //    down.Clock = this.chkLocalTime.Checked ? DateTime.Now : this.vClock.Value;
+                //}
+                //if (this.chkVoltage.Checked)
+                //{
+                //    MessageBox.Show("电压不允许设置");
+                //    this.chkVoltage.Checked = false;
+                //    return;
+                //}
+                //if (this.chkStationCmdID.Checked)
+                //{
+                //    MessageBox.Show("站号不允许设置");
+                //    this.chkStationCmdID.Checked = false;
+                //    return;
+                //}
+                //if (this.chkNormalState.Checked)
+                //{
+                //    cmds.Add(EDownParam.NormalState);
+                //    var normalState = this.vNormalState.Text.Trim();
+                //    if (this.m_vNormalStateLists.Contains(normalState))
+                //    {
+                //        down.NormalState = ProtocolMaps.NormalState4UI.FindKey(normalState);
+                //    }
+                //    else
+                //    {
+                //        MessageBox.Show("常规状态 参数不是合法的!");
+                //        return;
+                //    }
+                //}
                 if (this.chkVersionNum.Checked)
                 {
                     MessageBox.Show("版本号不允许设置");
@@ -1377,87 +1377,87 @@ namespace Hydrology.Forms
                     return;
                 }
                 //增加定值水量控制
-                if (this.waterYield.Checked)
-                {
-                    cmdsGY.Add(EDownParamGY.waterYield);
-                    downGY.WaterYield = this.vVersionNum.Text;
-                }
-                if (this.chkWorkStatus.Checked)
-                {
-                    cmds.Add(EDownParam.WorkStatus);
-                    string workStatus = this.vWorkStatus.Text.Trim();
-                    if (this.m_vWorkStatusLists.Contains(workStatus))
-                    {
-                        down.WorkStatus = ProtocolMaps.WorkStatus4UI.FindKey(workStatus);
-                    }
-                    else
-                    {
-                        MessageBox.Show("工作状态 参数不是合法的!");
-                        return;
-                    }
+                //if (this.waterYield.Checked)
+                //{
+                //    cmdsGY.Add(EDownParamGY.waterYield);
+                //    downGY.WaterYield = this.vVersionNum.Text;
+                //}
+                //if (this.chkWorkStatus.Checked)
+                //{
+                //    cmds.Add(EDownParam.WorkStatus);
+                //    string workStatus = this.vWorkStatus.Text.Trim();
+                //    if (this.m_vWorkStatusLists.Contains(workStatus))
+                //    {
+                //        down.WorkStatus = ProtocolMaps.WorkStatus4UI.FindKey(workStatus);
+                //    }
+                //    else
+                //    {
+                //        MessageBox.Show("工作状态 参数不是合法的!");
+                //        return;
+                //    }
 
-                    cmdsGY.Add(EDownParamGY.basicConfigModify);
-                    downGY.BasicConfigModify = this.basicconfig.Text;
+                //    cmdsGY.Add(EDownParamGY.basicConfigModify);
+                //    downGY.BasicConfigModify = this.basicconfig.Text;
 
-                }
-                if (this.chkTimePeriod.Checked)
-                {
-                    cmds.Add(EDownParam.TimePeriod);
-                    string temp = String.Format("{0:D2}", Int16.Parse(this.vTimePeriod.Text));
-                    if (this.m_vTimePeriodLists.Contains(Int16.Parse(this.vTimePeriod.Text.Trim())))
-                    {
-                        down.TimePeriod = ProtocolMaps.TimePeriodMap.FindKey(temp);
-                    }
-                    else
-                    {
-                        MessageBox.Show("定时段次 参数不是合法的!");
-                        return;
-                    }
-                }
-                if (this.chkTimeChoice.Checked)
-                {
-                    cmds.Add(EDownParam.TimeChoice);
-                    string temp = this.vTimeChoice.Text.Trim();
-                    if (this.m_vTimeChoiceLists.Contains(temp))
-                    {
-                        down.TimeChoice = ProtocolMaps.TimeChoice4UI.FindKey(temp);
-                    }
-                    else
-                    {
-                        MessageBox.Show("对时选择 参数不是合法的!");
-                        return;
-                    }
-                }
+                //}
+                //if (this.chkTimePeriod.Checked)
+                //{
+                //    cmds.Add(EDownParam.TimePeriod);
+                //    string temp = String.Format("{0:D2}", Int16.Parse(this.vTimePeriod.Text));
+                //    if (this.m_vTimePeriodLists.Contains(Int16.Parse(this.vTimePeriod.Text.Trim())))
+                //    {
+                //        down.TimePeriod = ProtocolMaps.TimePeriodMap.FindKey(temp);
+                //    }
+                //    else
+                //    {
+                //        MessageBox.Show("定时段次 参数不是合法的!");
+                //        return;
+                //    }
+                //}
+                //if (this.chkTimeChoice.Checked)
+                //{
+                //    cmds.Add(EDownParam.TimeChoice);
+                //    string temp = this.vTimeChoice.Text.Trim();
+                //    if (this.m_vTimeChoiceLists.Contains(temp))
+                //    {
+                //        down.TimeChoice = ProtocolMaps.TimeChoice4UI.FindKey(temp);
+                //    }
+                //    else
+                //    {
+                //        MessageBox.Show("对时选择 参数不是合法的!");
+                //        return;
+                //    }
+                //}
 
-                if (this.chkMainChannel.Checked)
-                {
-                    cmds.Add(EDownParam.StandbyChannel);
+                //if (this.chkMainChannel.Checked)
+                //{
+                //    cmds.Add(EDownParam.StandbyChannel);
 
-                    string mainChannel = this.vMainChannel.Text.Trim();
-                    string viceChannel = this.vViceChannel.Text.Trim();
-                    if (!this.m_vMainChannelLists.Contains(mainChannel))
-                    {
-                        MessageBox.Show("主用信道 参数不是合法的!");
-                        return;
-                    }
-                    if (!this.m_vViceChannelLists.Contains(viceChannel))
-                    {
-                        MessageBox.Show("备用信道 参数不是合法的!");
-                        return;
-                    }
-                    if (mainChannel == viceChannel)
-                    {
-                        MessageBox.Show("主用信道和备用信道不能同时设为" + vMainChannel.Text);
-                        return;
-                    }
-                    down.MainChannel = ProtocolMaps.ChannelType4UIMap.FindKey(mainChannel);
-                    down.ViceChannel = ProtocolMaps.ChannelType4UIMap.FindKey(viceChannel);
+                //    string mainChannel = this.vMainChannel.Text.Trim();
+                //    string viceChannel = this.vViceChannel.Text.Trim();
+                //    if (!this.m_vMainChannelLists.Contains(mainChannel))
+                //    {
+                //        MessageBox.Show("主用信道 参数不是合法的!");
+                //        return;
+                //    }
+                //    if (!this.m_vViceChannelLists.Contains(viceChannel))
+                //    {
+                //        MessageBox.Show("备用信道 参数不是合法的!");
+                //        return;
+                //    }
+                //    if (mainChannel == viceChannel)
+                //    {
+                //        MessageBox.Show("主用信道和备用信道不能同时设为" + vMainChannel.Text);
+                //        return;
+                //    }
+                //    down.MainChannel = ProtocolMaps.ChannelType4UIMap.FindKey(mainChannel);
+                //    down.ViceChannel = ProtocolMaps.ChannelType4UIMap.FindKey(viceChannel);
 
-                    cmdsGY.Add(EDownParamGY.oldPwd);
-                    downGY.OldPwd = this.oldPwd.Text;
-                    cmdsGY.Add(EDownParamGY.newPwd);
-                    downGY.NewPwd = this.newPwd.Text;
-                }
+                //    cmdsGY.Add(EDownParamGY.oldPwd);
+                //    downGY.OldPwd = this.oldPwd.Text;
+                //    cmdsGY.Add(EDownParamGY.newPwd);
+                //    downGY.NewPwd = this.newPwd.Text;
+                //}
                 if (this.chkDestPhoneNum.Checked)
                 {
                     cmds.Add(EDownParam.DestPhoneNum);
@@ -1469,17 +1469,17 @@ namespace Hydrology.Forms
                     }
                     down.DestPhoneNum = temp;
                 }
-                if (this.chkTeleNum.Checked)
-                {
-                    cmds.Add(EDownParam.TeleNum);
-                    string temp = this.vTeleNum.Text.Trim();
-                    if (!CStringUtil.IsDigit(temp))
-                    {
-                        MessageBox.Show("SIM卡号 所有位必须全部为数字!");
-                        return;
-                    }
-                    down.TeleNum = temp;
-                }
+                //if (this.chkTeleNum.Checked)
+                //{
+                //    cmds.Add(EDownParam.TeleNum);
+                //    string temp = this.vTeleNum.Text.Trim();
+                //    if (!CStringUtil.IsDigit(temp))
+                //    {
+                //        MessageBox.Show("SIM卡号 所有位必须全部为数字!");
+                //        return;
+                //    }
+                //    down.TeleNum = temp;
+                //}
                 if (this.chkTerminalNum.Checked)
                 {
                     cmds.Add(EDownParam.TerminalNum);
@@ -1491,20 +1491,20 @@ namespace Hydrology.Forms
                     }
                     down.TerminalNum = temp;
                 }
-                if (this.chkRespBeam.Checked)
-                {
-                    cmds.Add(EDownParam.RespBeam);
-                    string temp = this.ICset.Text.Trim();
-                    if (!CStringUtil.IsDigit(temp))
-                    {
-                        MessageBox.Show("响应波束 所有位必须全部为数字!");
-                        return;
-                    }
-                    down.RespBeam = temp;
+                //if (this.chkRespBeam.Checked)
+                //{
+                //    cmds.Add(EDownParam.RespBeam);
+                //    string temp = this.ICset.Text.Trim();
+                //    if (!CStringUtil.IsDigit(temp))
+                //    {
+                //        MessageBox.Show("响应波束 所有位必须全部为数字!");
+                //        return;
+                //    }
+                //    down.RespBeam = temp;
 
-                    cmdsGY.Add(EDownParamGY.ICconfig);
-                    downGY.ICconfig = this.ICset.Text;
-                }
+                //    cmdsGY.Add(EDownParamGY.ICconfig);
+                //    downGY.ICconfig = this.ICset.Text;
+                //}
                 if (this.chkRingsNum.Checked)
                 {
                     cmds.Add(EDownParam.RingsNum);
@@ -1608,32 +1608,32 @@ namespace Hydrology.Forms
                     cmds.Add(EDownParam.SelectCollectionParagraphs);
                     down.SelectCollectionParagraphs = ProtocolMaps.SelectCollectionParagraphs4UIMap.FindKey(temp);
                 }
-                if (this.chkUserName.Checked)
-                {
-                    string temp = this.OperatingParaModify.Text;
-                    if (!CStringUtil.IsDigitOrAlpha(temp))
-                    {
-                        MessageBox.Show("用户名只能为字母或者数字！");
-                        return;
-                    }
-                    cmds.Add(EDownParam.UserName);
-                    down.UserName = temp;
+                //if (this.chkUserName.Checked)
+                //{
+                //    string temp = this.OperatingParaModify.Text;
+                //    if (!CStringUtil.IsDigitOrAlpha(temp))
+                //    {
+                //        MessageBox.Show("用户名只能为字母或者数字！");
+                //        return;
+                //    }
+                //    cmds.Add(EDownParam.UserName);
+                //    down.UserName = temp;
 
-                    cmdsGY.Add(EDownParamGY.operatingParaModify);
-                    downGY.OperatingParaModify = this.OperatingParaModify.Text;
+                //    cmdsGY.Add(EDownParamGY.operatingParaModify);
+                //    downGY.OperatingParaModify = this.OperatingParaModify.Text;
 
-                }
-                if (this.chkStationName.Checked)
-                {
-                    string temp = this.vStationName.Text;
-                    if (!CStringUtil.IsDigitOrAlpha(temp))
-                    {
-                        MessageBox.Show("测站名只能为字母或者数字！");
-                        return;
-                    }
-                    cmds.Add(EDownParam.StationName);
-                    down.StationName = temp;
-                }
+                //}
+                //if (this.chkStationName.Checked)
+                //{
+                //    string temp = this.vStationName.Text;
+                //    if (!CStringUtil.IsDigitOrAlpha(temp))
+                //    {
+                //        MessageBox.Show("测站名只能为字母或者数字！");
+                //        return;
+                //    }
+                //    cmds.Add(EDownParam.StationName);
+                //    down.StationName = temp;
+                //}
                 //if (cmds.Count == 0)
                 //{
                 //    MessageBox.Show("请选择参数!");
@@ -1733,7 +1733,7 @@ namespace Hydrology.Forms
         }
         private void chkLocalTime_CheckedChanged(object sender, EventArgs e)
         {
-            this.vClock.Enabled = !this.chkLocalTime.Checked;
+            //this.vClock.Enabled = !this.chkLocalTime.Checked;
         }
 
         /**********  ComboBox Event Handler **********/
@@ -1871,10 +1871,10 @@ namespace Hydrology.Forms
                 lbl.BackColor = System.Drawing.SystemColors.ButtonFace;
             }
 
-            if (Object.ReferenceEquals(control, this.vVoltage))
-                this.vVoltage.Enabled = false;
-            if (Object.ReferenceEquals(control, this.vStationCmdID))
-                this.vStationCmdID.Enabled = false;
+            //if (Object.ReferenceEquals(control, this.vVoltage))
+            //    this.vVoltage.Enabled = false;
+            //if (Object.ReferenceEquals(control, this.vStationCmdID))
+            //    this.vStationCmdID.Enabled = false;
             if (Object.ReferenceEquals(control, this.vVersionNum))
                 this.vVersionNum.Enabled = false;
             //if (Object.ReferenceEquals(control, this.vStationType))
@@ -1885,10 +1885,10 @@ namespace Hydrology.Forms
         {
             control.BackColor = Color.Green;
             control.ForeColor = Color.White;
-            if (Object.ReferenceEquals(control, this.vVoltage))
-                this.vVoltage.Enabled = true;
-            if (Object.ReferenceEquals(control, this.vStationCmdID))
-                this.vStationCmdID.Enabled = true;
+            //if (Object.ReferenceEquals(control, this.vVoltage))
+            //    this.vVoltage.Enabled = true;
+            //if (Object.ReferenceEquals(control, this.vStationCmdID))
+            //    this.vStationCmdID.Enabled = true;
             if (Object.ReferenceEquals(control, this.vVersionNum))
                 this.vVersionNum.Enabled = true;
             //if (Object.ReferenceEquals(control, this.vStationType))
