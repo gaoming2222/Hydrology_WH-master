@@ -245,6 +245,7 @@
             this.MI_VoiceConfig.Size = new System.Drawing.Size(161, 22);
             this.MI_VoiceConfig.Tag = "声音配置";
             this.MI_VoiceConfig.Text = "声音配置...";
+            this.MI_VoiceConfig.Visible = false;
             // 
             // toolStripSeparator4
             // 
@@ -275,7 +276,7 @@
             this.MI_LogIn.Name = "MI_LogIn";
             this.MI_LogIn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
             this.MI_LogIn.ShowShortcutKeys = false;
-            this.MI_LogIn.Size = new System.Drawing.Size(125, 22);
+            this.MI_LogIn.Size = new System.Drawing.Size(152, 22);
             this.MI_LogIn.Tag = "用户登陆";
             this.MI_LogIn.Text = "用户登陆...";
             // 
@@ -286,14 +287,14 @@
             this.MI_UserLogout.Name = "MI_UserLogout";
             this.MI_UserLogout.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
             this.MI_UserLogout.ShowShortcutKeys = false;
-            this.MI_UserLogout.Size = new System.Drawing.Size(125, 22);
+            this.MI_UserLogout.Size = new System.Drawing.Size(152, 22);
             this.MI_UserLogout.Tag = "用户退出";
             this.MI_UserLogout.Text = "用户退出";
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(122, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(149, 6);
             // 
             // MI_UserMgr
             // 
@@ -301,7 +302,7 @@
             this.MI_UserMgr.Name = "MI_UserMgr";
             this.MI_UserMgr.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
             this.MI_UserMgr.ShowShortcutKeys = false;
-            this.MI_UserMgr.Size = new System.Drawing.Size(125, 22);
+            this.MI_UserMgr.Size = new System.Drawing.Size(152, 22);
             this.MI_UserMgr.Tag = "用户管理";
             this.MI_UserMgr.Text = "用户注册";
             // 
@@ -382,6 +383,7 @@
             this.MI_StageFlowMapMgr.Size = new System.Drawing.Size(189, 22);
             this.MI_StageFlowMapMgr.Tag = "水位流量管理";
             this.MI_StageFlowMapMgr.Text = "水位流量(库容)管理...";
+            this.MI_StageFlowMapMgr.Visible = false;
             // 
             // I_searchDebug
             // 
@@ -404,21 +406,21 @@
             // ReadAndSetting
             // 
             this.ReadAndSetting.Name = "ReadAndSetting";
-            this.ReadAndSetting.Size = new System.Drawing.Size(133, 22);
+            this.ReadAndSetting.Size = new System.Drawing.Size(152, 22);
             this.ReadAndSetting.Tag = "读取与设置";
             this.ReadAndSetting.Text = "参数配置...";
             // 
             // BatchTransmit
             // 
             this.BatchTransmit.Name = "BatchTransmit";
-            this.BatchTransmit.Size = new System.Drawing.Size(133, 22);
+            this.BatchTransmit.Size = new System.Drawing.Size(152, 22);
             this.BatchTransmit.Tag = "批量传输";
             this.BatchTransmit.Text = "批量传输...";
             // 
             // MI_SysTimerAdjust
             // 
             this.MI_SysTimerAdjust.Name = "MI_SysTimerAdjust";
-            this.MI_SysTimerAdjust.Size = new System.Drawing.Size(133, 22);
+            this.MI_SysTimerAdjust.Size = new System.Drawing.Size(152, 22);
             this.MI_SysTimerAdjust.Tag = "系统对时";
             this.MI_SysTimerAdjust.Text = "批量远程...";
             // 
@@ -594,19 +596,19 @@
             this.indexToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("indexToolStripMenuItem.Image")));
             this.indexToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
             this.indexToolStripMenuItem.Name = "indexToolStripMenuItem";
-            this.indexToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.indexToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.indexToolStripMenuItem.Tag = "帮助";
             this.indexToolStripMenuItem.Text = "帮助(&I)";
             // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(139, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(149, 6);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem.Tag = "关于";
             this.aboutToolStripMenuItem.Text = "关于(&A) ... ...";
             // 

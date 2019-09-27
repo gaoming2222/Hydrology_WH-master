@@ -300,6 +300,7 @@
     <Compile Include="DataMgr\grpcServer.cs" />
     <Compile Include="DataMgr\HttpHelper.cs" />
     <Compile Include="DataMgr\interfaceHelper.cs" />
+    <Compile Include="DataMgr\MsgHelper.cs" />
     <Compile Include="DataMgr\SystemTimeConfig.cs" />
     <Compile Include="Forms\CBatchFlashMgrForm.cs">
       <SubType>Form</SubType>

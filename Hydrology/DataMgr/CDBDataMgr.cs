@@ -2501,6 +2501,8 @@ namespace Hydrology.DataMgr
                 #endregion 雨量表
 
                 #region 水位表
+                bool isWarn = false;
+                Nullable<decimal> warnWaterStage = null;
                 if (args.EStationType == EStationType.EH || args.EStationType == EStationType.RE || args.EStationType == EStationType.GT
                     || args.EStationType == EStationType.RP ||  args.EStationType == EStationType.EHydrology || args.EStationType == EStationType.ERiverWater)
                 {
@@ -2532,7 +2534,14 @@ namespace Hydrology.DataMgr
                             // 减去水位基值
                             // water.WaterStage = data.WaterStage.Value - station.DWaterBase.Value;
                             //1105gm
-                            water.WaterStage = data.WaterStage.Value + station.DWaterBase.Value;
+                            if(station.Watersensor.Trim() == "3")
+                            {
+                                water.WaterStage = station.DWaterBase.Value - data.WaterStage.Value;
+                            }
+                            else
+                            {
+                                water.WaterStage = data.WaterStage.Value + station.DWaterBase.Value;
+                            }
                         }
                         else
                         {
@@ -2546,7 +2555,19 @@ namespace Hydrology.DataMgr
                         int status = 1;
                         AssertWaterData(water, ref tmpRTDWaterDataState, ref status);
                         water.state = status;
+                        //如果水位数据超限，则短信提醒
                         listWater.Add(water);
+                        //如果水位超限，则标志发送
+                        if(status == 0 && !isWarn )
+                        {
+                            isWarn = true;
+                            warnWaterStage = water.WaterStage;
+                        }
+                    }
+                    //是 发送告警短信
+                    if(isWarn && station.GSM != null && station.GSM != "" && warnWaterStage.HasValue)
+                    {
+                        MsgHelper.Instance.sendWarnMsg(station.GSM, station.StationID + station.StationName + "水位异常！ 水位：" + warnWaterStage.ToString());
                     }
                     if(listWater != null && listWater.Count > 0)
                     {
@@ -2627,10 +2648,15 @@ namespace Hydrology.DataMgr
                         realtime.DWaterYield = args.Datas[tmpDataCount - 1].WaterStage; //水位
                         if (station.DWaterBase.HasValue)
                         {
-                            //  减去水位基值
-                            //realtime.DWaterYield -= station.DWaterBase.Value;
-                            //2017_03
-                            realtime.DWaterYield += station.DWaterBase.Value;
+                            if (station.Watersensor.Trim() == "3")
+                            {
+                                realtime.DWaterYield = station.DWaterBase.Value - args.Datas[tmpDataCount - 1].WaterStage;
+                            }
+                            else
+                            {
+                                realtime.DWaterYield += station.DWaterBase.Value;
+                            }
+                            
                         }
 
                         realtime.DWaterFlowFindInTable = tmpWaterFlow; //相应流量

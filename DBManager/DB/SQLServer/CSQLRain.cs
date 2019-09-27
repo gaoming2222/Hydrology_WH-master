@@ -11,7 +11,7 @@ using Hydrology.Entity;
 namespace Hydrology.DBManager.DB.SQLServer
 {
     /// <summary>
-    /// 提供SQL Server 数据库中对雨量表的操作
+    /// 提供SQL Server 数据库中对雨量ffff表的操作
     /// </summary>
     public class CSQLRain : CSQLBase, IRainProxy
     {
