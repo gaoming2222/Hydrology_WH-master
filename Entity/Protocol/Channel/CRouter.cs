@@ -31,5 +31,7 @@ namespace Entity.Protocol.Channel
         public byte[] rawData { get; set; }
 
         public byte[] receiveTime { get; set; }
+
+        public int port { get; set; }
     }
 }

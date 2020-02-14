@@ -166,6 +166,11 @@ namespace Hydrology.Entity
         public Nullable<Decimal> WaterStage;
 
         /// <summary>
+        /// 流量
+        /// </summary>
+        public Nullable<Decimal> WaterFlow;
+
+        /// <summary>
         /// 流量，仪器读取，需要计算，才能得到有用数值
         /// </summary>
         public Nullable<Decimal> TotalRain;

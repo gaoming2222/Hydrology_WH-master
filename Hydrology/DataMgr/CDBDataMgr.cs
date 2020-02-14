@@ -14,6 +14,11 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
 using System.Xml;
+using qcloudsms_csharp;
+using qcloudsms_csharp.json;
+using qcloudsms_csharp.httpclient;
+
+
 
 namespace Hydrology.DataMgr
 {
@@ -71,6 +76,10 @@ namespace Hydrology.DataMgr
         #endregion ///<单件模式
 
         #region 数据成员
+        private int num111 = 0;
+        private int num222 = 0;
+        private int num333 = 0;
+
         private IStationProxy m_proxyStation;
         private ISubCenterProxy m_proxySubCenter;
         private IWaterProxy m_proxyWater;
@@ -134,6 +143,18 @@ namespace Hydrology.DataMgr
         //  System.Timers.Timer aTimer = new System.Timers.Timer((60 - DateTime.Now.Second) * 1000); 
         #endregion
 
+        #region 短信发送参数
+        // 短信应用 SDK AppID
+        int appid = 1400279712;
+        // 短信应用 SDK AppKey
+        string appkey = "663ab1f1caa8fdd57c7241bbc9363e48";
+        // 需要发送短信的手机号码
+        string[] phoneNumbers = { "15107118210", "13343490251"};
+        // 短信模板 ID，需要在短信控制台中申请
+        int templateId = 461361; // NOTE: 这里的模板 ID`7839`只是示例，真实的模板 ID 需要在短信控制台中申请
+                               // 签名
+        string smsSign = "cjwswjinfo"; // NOTE: 签名参数使用的是`签名内容`，而不是`签名ID`。这里的签名"腾讯云"只是示例，真实的签名需要在短信控制台申请
+        #endregion
         #region 公共方法
 
         public bool Init()
@@ -2393,7 +2414,7 @@ namespace Hydrology.DataMgr
         {
             try
             {
-
+                DateTime timeFlag = new DateTime(2000, 1, 1, 0, 0, 0);
                 Nullable<Decimal> tmpPeriodRain = null;
                 Nullable<Decimal> tmpWaterFlow = null;
                 ERTDDataState tmpRTDRainDataState = ERTDDataState.ENormal;
@@ -2417,162 +2438,144 @@ namespace Hydrology.DataMgr
                 // 更新水量表，雨量表以及电压表
                 //TODO 新站点中不包括雨量站，暂时不增加处理雨量数据
                 #region 雨量表
-                //if (args.EStationType == EStationType.EH || args.EStationType == EStationType.RE || args.EStationType == EStationType.GT
-                //    || args.EStationType == EStationType.RP || args.EStationType == EStationType.ERainFall || args.EStationType == EStationType.EHydrology)
-                //    {
-                //    List<CEntityRain> rains = new List<CEntityRain>();
-                //    foreach (CSingleStationData data in args.Datas)
-                //    {
-                //        // 是否和上一条时间一致, 就丢失当条数据
-                //        if (m_mapStationRTD[station.StationID].TimeDeviceGained == data.DataTime)
-                //        {
-                //            Debug.WriteLine("drop");
-                //            continue;
-                //        }
+                List<CEntityRain> rains = new List<CEntityRain>();
+                foreach (CSingleStationData data in args.Datas)
+                {
+                    // 是否和上一条时间一致, 就丢失当条数据
+                    if (m_mapStationRTD[station.StationID].TimeDeviceGained == data.DataTime)
+                    {
+                        Debug.WriteLine("drop");
+                        continue;
+                    }
 
-                //        if (data.TotalRain == null && data.PeriodRain == null && data.CurrentRain == null)
-                //        {
-                //            continue;
-                //        }
-                //        //station.LastDayTime= data.DataTime
+                    //如果时间不对则丢弃数据
+                    if (data.DataTime.Year < 2010)
+                    {
+                        continue;
+                    }
 
-                //        int year = data.DataTime.Year;
-                //        int month = data.DataTime.Month;
-                //        int day = data.DataTime.Day;
-                //        CEntityRain rain = new CEntityRain();
-                //        rain.BState = 1;
-                //        int hour = data.DataTime.Hour;
-                //        int minute = data.DataTime.Minute;
-                //        int second = data.DataTime.Second;
+                    if ((data.TotalRain == null || data.TotalRain < 0) && (data.DiffRain == null || data.DiffRain < 0) && (data.CurrentRain == null || data.CurrentRain < 0))
+                    {
+                        continue;
+                    }
 
-                //        //累计降水量
-                //        if (data.TotalRain.HasValue && data.TotalRain >= 0)
-                //        {
-                //            rain.TotalRain = data.TotalRain;
-                //        } else
-                //        {
-                //            rain.TotalRain = null;
-                //        }
-                //        //差值降水量
-                //        if (data.PeriodRain.HasValue && data.PeriodRain >= 0)
-                //        {
-                //            rain.PeriodRain = data.PeriodRain;
-                //            if(station.DRainChange.HasValue && rain.PeriodRain > station.DRainChange)
-                //            {
-                //                rain.BState = 0;
-                //            }
-                //        }
-                //        else
-                //        {
-                //            rain.PeriodRain = null;
-                //        }
+                    CEntityRain rain = new CEntityRain();
+                    rain.BState = 1;
+                    int hour = data.DataTime.Hour;
+                    int minute = data.DataTime.Minute;
+                    int second = data.DataTime.Second;
 
-                //        //8：00止当前时间点 当前降水量
-                //        if (data.CurrentRain.HasValue && data.CurrentRain >= 0)
-                //        {
-                //            rain.DayRain = data.CurrentRain;
-                //            rain.DifferneceRain = data.CurrentRain;
-                //        }
-                //        else
-                //        {
-                //            rain.DayRain = data.CurrentRain;
-                //            rain.DifferneceRain = data.CurrentRain;
-                //        }
-                //        rain.StationID = args.StrStationID;
-                //        rain.TimeCollect = data.DataTime;
-                //        rain.TimeRecieved = args.RecvDataTime;
-                //        rain.MessageType = args.EMessageType;
-                //        rain.ChannelType = args.EChannelType;
-                //        if (rain.PeriodRain != null || rain.TotalRain != null || rain.DayRain != null)
-                //        {
-                //            rains.Add(rain);
-                //        }
-                //        // 更新站点信息，便于下次计算日雨量和时段雨量
-                //        station.LastTotalRain = rain.TotalRain;
-                //        // 如果时间设置的误差范围内
-                //        int offset = (data.DataTime.Hour - 8) * 60 + data.DataTime.Minute;
-                //    }
-                //    //interfaceHelper.Instance.insertRainList(rains);
-                //    if(rains !=null && rains.Count > 0)
-                //    {
-                //        m_proxyRain.AddNewRows_DataModify(rains);
-                //    }
-                //}
+                    //rain基本要素
+                    rain.StationID = args.StrStationID;
+                    rain.TimeCollect = data.DataTime;
+                    rain.TimeRecieved = args.RecvDataTime;
+                    rain.MessageType = args.EMessageType;
+                    rain.ChannelType = args.EChannelType;
+
+                    //雨量数据
+                    rain.TotalRain = data.TotalRain;
+                    rain.DifferneceRain = data.DiffRain;
+                    rain.DayRain = data.CurrentRain;
+                    rain.BState = 1;
+
+                    if (rain.PeriodRain != null || rain.TotalRain != null || rain.DayRain != null)
+                    {
+                        rains.Add(rain);
+                    }
+                }
+                if (rains != null && rains.Count > 0)
+                {
+                    num111 = num111 + rains.Count;
+                    CSystemInfoMgr.Instance.AddInfo("雨量数据" + num111);
+                    m_proxyRain.AddNewRows_DataModify(rains);
+                }
                 #endregion 雨量表
 
                 #region 水位表
                 bool isWarn = false;
                 Nullable<decimal> warnWaterStage = null;
-                if (args.EStationType == EStationType.EH || args.EStationType == EStationType.RE || args.EStationType == EStationType.GT
-                    || args.EStationType == EStationType.RP ||  args.EStationType == EStationType.EHydrology || args.EStationType == EStationType.ERiverWater)
+                List<CEntityWater> listWater = new List<CEntityWater>();
+                foreach (CSingleStationData data in args.Datas)
                 {
-                    List<CEntityWater> listWater = new List<CEntityWater>();
-                    foreach (CSingleStationData data in args.Datas)
+                    // 是否和上一条时间一致, 就丢失当条数据
+                    if (m_mapStationRTD[station.StationID].TimeDeviceGained == data.DataTime)
                     {
-                        // 是否和上一条时间一致, 就丢失当条数据
-                        if (m_mapStationRTD[station.StationID].TimeDeviceGained == data.DataTime)
-                        {
-                            Debug.WriteLine("drop");
-                            continue;
-                        }
+                        Debug.WriteLine("drop");
+                        continue;
+                    }
+                    if (data.DataTime.Year < 2010)
+                    {
+                        continue;
+                    }
+                    if ((data.WaterStage == null || data.WaterStage <= -200) && (data.WaterFlow == null || data.WaterFlow <= -200))
+                    {
+                        continue;
+                    }
 
-                        if (data.WaterStage <= -200)
-                        {
-                            continue;
-                        }
+                    CEntityWater water = new CEntityWater();
+                    water.StationID = station.StationID;
 
-                        CEntityWater water = new CEntityWater();
-                        water.StationID = station.StationID;
-                        //water.TimeCollect = data.DataTime;
-                        water.TimeCollect = new DateTime(data.DataTime.Year, data.DataTime.Month, data.DataTime.Day
-                            , data.DataTime.Hour, data.DataTime.Minute, 0);
-                        //water.TimeCollect = new DateTime(data.DataTime.Year, data.DataTime.Month, data.DataTime.Day
-                        //    , 18, 0, 0);
-                        water.TimeRecieved = args.RecvDataTime;
-                        if (station.DWaterBase.HasValue)
+                    water.TimeCollect = new DateTime(data.DataTime.Year, data.DataTime.Month, data.DataTime.Day
+                        , data.DataTime.Hour, data.DataTime.Minute, 0);
+                    water.TimeRecieved = args.RecvDataTime;
+                    if (station.DWaterBase.HasValue)
+                    {
+                        if (station.Watersensor.Trim() == "3")
                         {
-                            // 减去水位基值
-                            // water.WaterStage = data.WaterStage.Value - station.DWaterBase.Value;
-                            //1105gm
-                            if(station.Watersensor.Trim() == "3")
-                            {
-                                water.WaterStage = station.DWaterBase.Value - data.WaterStage.Value;
-                            }
-                            else
-                            {
-                                water.WaterStage = data.WaterStage.Value + station.DWaterBase.Value;
-                            }
+                            water.WaterStage = station.DWaterBase.Value - data.WaterStage.Value;
                         }
                         else
                         {
-                            water.WaterStage = data.WaterStage.Value;
-                        }
-                        //tmpWaterFlow = GetWaterFlowByWaterStageAndStation(args.StrStationID, data.WaterStage.Value);
-                        tmpWaterFlow = GetWaterFlowByWaterStageAndStation(args.StrStationID, water.WaterStage);
-                        water.WaterFlow = tmpWaterFlow; //此处需要计算的
-                        water.ChannelType = args.EChannelType;
-                        water.MessageType = args.EMessageType;
-                        int status = 1;
-                        AssertWaterData(water, ref tmpRTDWaterDataState, ref status);
-                        water.state = status;
-                        //如果水位数据超限，则短信提醒
-                        listWater.Add(water);
-                        //如果水位超限，则标志发送
-                        if(status == 0 && !isWarn )
-                        {
-                            isWarn = true;
-                            warnWaterStage = water.WaterStage;
+                            water.WaterStage = data.WaterStage.Value + station.DWaterBase.Value;
                         }
                     }
-                    //是 发送告警短信
-                    if(isWarn && station.GSM != null && station.GSM != "" && warnWaterStage.HasValue)
+                    else
                     {
-                        MsgHelper.Instance.sendWarnMsg(station.GSM, station.StationID + station.StationName + "水位异常！ 水位：" + warnWaterStage.ToString());
+                        water.WaterStage = data.WaterStage.Value;
                     }
-                    if(listWater != null && listWater.Count > 0)
+                    water.WaterFlow = data.WaterFlow; //此处需要计算的
+                    water.ChannelType = args.EChannelType;
+                    water.MessageType = args.EMessageType;
+                    int status = 1;
+                    if(water.WaterStage > station.DWaterMax)
                     {
-                        m_proxyWater.AddNewRows_1(listWater);
+                        isWarn = true;
+                        warnWaterStage = water.WaterStage;
                     }
+                    //AssertWaterData(water, ref tmpRTDWaterDataState, ref status);
+                    water.state = status;
+                    listWater.Add(water);
+                }
+                //是 发送告警短信
+                //if (isWarn && station.GSM != null && station.GSM != "" && warnWaterStage.HasValue)
+                //{
+                //    MsgHelper.Instance.sendWarnMsg(station.GSM, station.StationID + station.StationName + "水位异常！ 水位：" + warnWaterStage.ToString());
+                //}
+
+                #region 短信发送
+                try
+                {
+                    SmsSingleSender ssender = new SmsSingleSender(appid, appkey);
+                    var result = ssender.sendWithParam("86", phoneNumbers[0],
+                        templateId, new[] { station.StationName, warnWaterStage.ToString().Substring(0,5) }, smsSign, "", "");
+                    Console.WriteLine(result);
+                }
+                catch (JSONException e)
+                {
+                    Console.WriteLine(e);
+                }
+                catch (HTTPException e)
+                {
+                    Console.WriteLine(e);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                #endregion
+                if (listWater != null && listWater.Count > 0)
+                {
+                    m_proxyWater.AddNewRows_1(listWater);
                 }
                 #endregion 水量表
 
@@ -2586,7 +2589,10 @@ namespace Hydrology.DataMgr
                         Debug.WriteLine("drop");
                         continue;
                     }
-
+                    if (data.DataTime.Year < 2010)
+                    {
+                        continue;
+                    }
                     if (data.Voltage < 0)
                     {
                         continue;
@@ -2601,20 +2607,24 @@ namespace Hydrology.DataMgr
                     voltage.ChannelType = args.EChannelType;
                     voltage.MessageType = args.EMessageType;
                     int status = 1;
-                    AssertVoltageData(voltage, ref tmpRTDVoltageDataState, ref status);
+                    //AssertVoltageData(voltage, ref tmpRTDVoltageDataState, ref status);
                     voltage.state = status;
                     if (voltage.Voltage != null && voltage.Voltage > 0)
                     {
+                        
                         listVoltages.Add(voltage);
                     }
                 }
                 //m_proxyVoltage.AddNewRows(listVoltages);
                 if (listVoltages != null && listVoltages.Count > 0)
                 {
+                    num333 = num333 + listVoltages.Count;
+                    CSystemInfoMgr.Instance.AddInfo("电压数据" + num333);
                     m_proxyVoltage.AddNewRows_1(listVoltages);
                 }
                 #endregion 电压表
-
+                //更新上一条数据的时间
+                m_mapStationRTD[station.StationID].TimeDeviceGained = args.Datas[tmpDataCount - 1].DataTime;
                 #region 实时数据表
                 CEntityRealTime realtime = new CEntityRealTime();
                 realtime.StrStationID = station.StationID;
@@ -2624,46 +2634,46 @@ namespace Hydrology.DataMgr
                 realtime.StrStationName = station.StationName;
                 realtime.StrPort = args.StrSerialPort;
                 realtime.TimeReceived = args.RecvDataTime;
+                realtime.TimeDeviceGained = args.Datas[tmpDataCount - 1].DataTime; //采集时间
+                if (args.Datas[tmpDataCount - 1].DataTime.Year < 2018)
+                {
+                    realtime.TimeReceived = DateTime.Now;
+                    realtime.TimeDeviceGained = DateTime.Now; //采集时间
+                }
                 if (args.Datas[tmpDataCount - 1].Voltage > 0)
                 {
                     realtime.Dvoltage = args.Datas[tmpDataCount - 1].Voltage;   //电压
                 }
-                if (args.Datas[tmpDataCount - 1].PeriodRain.HasValue && args.Datas[tmpDataCount - 1].PeriodRain>=0)
+                //10分钟时段雨量
+                if (args.Datas[tmpDataCount - 1].DiffRain != null && args.Datas[tmpDataCount - 1].DiffRain >= 0)
                 {
-                    realtime.DPeriodRain = args.Datas[tmpDataCount - 1].PeriodRain;   //时段雨量
-                    if(station.DRainChange.HasValue && realtime.DPeriodRain > station.DRainChange)
+                    realtime.DPeriodRain = args.Datas[tmpDataCount - 1].DiffRain;
+                    if (station.DRainChange.HasValue && realtime.DPeriodRain > station.DRainChange)
                     {
                         realtime.ERTDState = ERTDDataState.EError;
                     }
                 }
-                if(args.Datas[tmpDataCount - 1].CurrentRain.HasValue && args.Datas[tmpDataCount - 1].CurrentRain >= 0)
+
+                //当前降雨
+                if (args.Datas[tmpDataCount - 1].CurrentRain != null && args.Datas[tmpDataCount - 1].CurrentRain >= 0)
                 {
                     realtime.DDayRainFall = args.Datas[tmpDataCount - 1].CurrentRain;
                 }
-                realtime.TimeDeviceGained = args.Datas[tmpDataCount - 1].DataTime; //采集时间
-                if (realtime.EIStationType == EStationType.EH)
-                {
-                    if (args.Datas[tmpDataCount - 1].WaterStage != -200 && args.Datas[tmpDataCount - 1].WaterStage != -20000)
-                    {
-                        realtime.DWaterYield = args.Datas[tmpDataCount - 1].WaterStage; //水位
-                        if (station.DWaterBase.HasValue)
-                        {
-                            if (station.Watersensor.Trim() == "3")
-                            {
-                                realtime.DWaterYield = station.DWaterBase.Value - args.Datas[tmpDataCount - 1].WaterStage;
-                            }
-                            else
-                            {
-                                realtime.DWaterYield += station.DWaterBase.Value;
-                            }
-                            
-                        }
 
-                        realtime.DWaterFlowFindInTable = tmpWaterFlow; //相应流量
-                    }
+                //水位
+                if (args.Datas[tmpDataCount - 1].WaterStage != null && args.Datas[tmpDataCount - 1].WaterStage >= -200)
+                {
+                    realtime.DWaterYield = args.Datas[tmpDataCount - 1].WaterStage;
                 }
 
+                //流量
+                if (args.Datas[tmpDataCount - 1].WaterFlow != null && args.Datas[tmpDataCount - 1].WaterFlow >= -200)
+                {
+                    realtime.DWaterFlowActual = args.Datas[tmpDataCount - 1].WaterFlow;
+                }
 
+                
+               
                 if (tmpRTDRainDataState == ERTDDataState.EError
                     || tmpRTDWaterDataState == ERTDDataState.EError
                     || tmpRTDVoltageDataState == ERTDDataState.EError)
@@ -2686,8 +2696,8 @@ namespace Hydrology.DataMgr
                 m_mapStationRTD[args.StrStationID] = realtime;
 
                 // 写入实时信息表
-                m_proxyRealtime.AddNewRow(realtime);
-                m_proxyRealtime.AddNewRow_1(realtime);
+                //m_proxyRealtime.AddNewRow(realtime);
+                //m_proxyRealtime.AddNewRow_1(realtime);
                 //m_proxyRealtime.UpdateRow(realtime);
             }
             catch (Exception)

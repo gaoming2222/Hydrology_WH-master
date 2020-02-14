@@ -21,6 +21,7 @@ namespace Hydrology.DataMgr
 
         public int dataNum = 0;
         public int gprsNum = 0;
+        public int num = 0;
         public ITransparen transparen = null;
 
         private System.Timers.Timer m_timer = new System.Timers.Timer()
@@ -2831,14 +2832,17 @@ namespace Hydrology.DataMgr
                         string rawStr = e.RawData;
                         report.Datas.Add(WrongParser(rawStr));
                     }
-
+                    num = num + report.Datas.Count;
+                    CSystemInfoMgr.Instance.AddInfo("收到数据条数："+ num);
                     foreach (var item in report.Datas)
                     {
+                        CSystemInfoMgr.Instance.AddInfo("水位：" + item.Water.ToString() + "总雨量" + item.Rain.ToString() +  "电压" + item.Voltge.ToString());
                         stationDatas.Datas.Add(new CSingleStationData()
                         {
                             WaterStage = item.Water,
+                            WaterFlow = item.WaterTemp,
                             TotalRain = item.Rain,
-                            DiffRain = item.DiffRain,
+                            DiffRain = item.Rain10,
                             PeriodRain = item.PeriodRain,
                             CurrentRain = item.CurrentRain,
                             Voltage = item.Voltge,

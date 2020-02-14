@@ -153,7 +153,7 @@ namespace Hydrology
                 InitMainFormMenu();
                 CreateMsgBinding();
 
-                ChangeUserMode(0);
+                ChangeUserMode(1);
 
                 //  显示实时数据表
                 CDBDataMgr.Instance.SentRTDMsg();
@@ -262,7 +262,8 @@ namespace Hydrology
         private void EHClosing(object sender, FormClosingEventArgs e)
         {
             // 只有管理员才能关闭页面
-            if (!m_bIsInAdministrator)
+            //if (!m_bIsInAdministrator)
+            if(false)
             {
                 e.Cancel = true;
                 MessageBox.Show("权限不够");
@@ -337,7 +338,7 @@ namespace Hydrology
             this.ChangeUserMode(e.Value);
             this.MI_UserLogout.Enabled = true;
             // 开启定时器，用于检测过于一段时间，自己退出登陆
-            m_timer.Start();
+            //m_timer.Start();
             if (UserModeChanged != null)
             {
                 UserModeChanged(this, new CEventSingleArgs<int>(e.Value));
@@ -464,8 +465,8 @@ namespace Hydrology
         private void EH_Timer(object sender, EventArgs e)
         {
             m_timer.Stop();
-            Logout();
-            CSystemInfoMgr.Instance.AddInfo("用户超时，自动退出登录");
+            //Logout();
+            //CSystemInfoMgr.Instance.AddInfo("用户超时，自动退出登录");
         }
         private void EH_Timer_gsm(object sender, EventArgs e)
         {

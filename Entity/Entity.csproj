@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CEntityCommunicationRate.cs" />
+    <Compile Include="CEntityPicture.cs" />
     <Compile Include="CEntityRain.cs" />
     <Compile Include="CEntitySerialPort.cs" />
     <Compile Include="CEntitySoilData.cs" />
